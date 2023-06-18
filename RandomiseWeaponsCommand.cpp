@@ -70,20 +70,7 @@ namespace GOTHIC_ENGINE {
 
                         if (npcCanWearWeapon(item, npc)) {
                             npcsCount += 1;
-
-                            if (equippedRangedItem != nullptr) {
-                                if (IsIgnoredOrTestItem(equippedRangedItem)) {
-                                    npc->UnequipItem(equippedRangedItem);
-                                }
-                                try {
-                                    if (!IsIgnoredOrTestItem(equippedRangedItem)) {
-                                        npc->RemoveFromInv(equippedRangedItem, 1);
-                                    }
-                                }
-                                catch (int s) {};
-                                equippedRangedItem->Release();
-                            }
-
+                            // apparantely you dont need to delete existing item :D
                             npc->PutInInv(item);
                             npc->EquipItem(item);
 
