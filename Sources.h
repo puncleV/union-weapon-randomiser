@@ -4,6 +4,7 @@
 // Automatically generated block
 #pragma region Includes
 #include "Randomiser.cpp"
+#include "ItemHelpers.cpp"
 #include "NpcHelper.cpp"
 #include "RandomiseWeaponsCommand.cpp"
 #include "Plugin.cpp"
