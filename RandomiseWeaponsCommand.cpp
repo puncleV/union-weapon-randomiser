@@ -59,7 +59,6 @@ namespace GOTHIC_ENGINE {
                 continue;
             }
             
-            player->PutInInv(item);
             item->Release();
 
             weapons_list.Insert(i);
@@ -104,7 +103,6 @@ namespace GOTHIC_ENGINE {
             if (item == nullptr || item->mainflag != ITM_CAT_FF || IsIgnoredItem(item)) {
                 continue;
             }
-            player->PutInInv(item);
             item->Release();
 
             weapons_list.Insert(i);
