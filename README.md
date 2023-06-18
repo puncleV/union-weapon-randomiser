@@ -7,10 +7,11 @@ Randomize weapons of all NPCs via Marvin command.
 1. [Build a project](https://worldofplayers.ru/threads/41466/)
 2. Activate Marvin
 3. Open console
-4. Type `weaponsrandomizer RWPNS`
-5. Look at how broken game become
-6. ???
-7. profit!
+4. Type `weaponsrandomizer RWPNS` - will randomise weapons of NPCs in currrent location 
+5. Type `weaponsrandomizer RDRP` - will *ADD* some loot to enemies (randomised for different items)
+6. Look at how broken game become
+7. ???
+8. profit!
 
 
 ## References

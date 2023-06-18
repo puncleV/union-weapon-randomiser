@@ -136,4 +136,13 @@ namespace GOTHIC_ENGINE {
 
         return "right";
     }
+
+    bool IsTooCoolLoot(oCItem* item) {
+        return item->GetObjectName().HasWordI("ITMI_POTIONPERMBLANK") || item->GetObjectName().HasWordI("ITPO") || item->GetObjectName().HasWordI("ITMI_TOPAZ") ||
+            item->GetObjectName().HasWordI("ITMI_DIAMOND") || item->GetObjectName().HasWordI("ITMI_RUBY") || item->GetObjectName().HasWordI("ITMI_SAPPHIRE") ||
+            item->GetObjectName().HasWordI("ITMI_EMERALD") || item->GetObjectName().HasWordI("EALBALZAM") || item->GetObjectName().HasWordI("ITFO_CAKE") ||
+            item->GetObjectName().HasWordI("ITPO_HEALTH_02") || item->GetObjectName().HasWordI("ITPO_MANA_02") ||
+            item->GetObjectName().HasWordI("ITPO_HEALTH_03") || item->GetObjectName().HasWordI("ITPO_MANA_03") || item->GetObjectName().HasWordI("ITPL_PERM_HERB") || item->GetObjectName().HasWordI("ITRI") ||
+            item->GetObjectName().HasWordI("ITSC");
+    }
 }
