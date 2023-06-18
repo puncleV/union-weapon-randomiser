@@ -28,33 +28,42 @@ namespace GOTHIC_ENGINE {
                     if (npcCanWearWeapon(item, npc)) {
                         npcsCount += 1;
                         auto equippedWeapon = npc->GetEquippedMeleeWeapon();
-                        npc->UnequipItem(equippedWeapon);
-                       
-                        if (!IsIgnoredOrTestItem(equippedWeapon)) {
-                            npc->RemoveFromInv(equippedWeapon, 1);
-                        }
 
-                        npc->PutInInv(item);
-                        npc->EquipItem(item);
-
-                        if (IsDual(item)) {
-                            auto anotherDual = FindRandomItemThatHasString(meleeWeaponsList, OppositDualHand(item));
-                            
-                            if (anotherDual != nullptr) {
-                                npc->PutInInv(anotherDual);
-                                npc->EquipItem(anotherDual);
-                                anotherDual->Release();
+                        if (equippedWeapon != nullptr) {
+                            if (IsIgnoredOrTestItem(equippedWeapon)) {
+                                npc->UnequipItem(equippedWeapon);
                             }
+
+                            if (!IsIgnoredOrTestItem(equippedWeapon)) {
+                                npc->RemoveFromInv(equippedWeapon, 1);
+                            }
+
+                            equippedWeapon->Release();
+                            
+                            npc->PutInInv(item);
+                            npc->EquipItem(item);
+
+                            if (IsDual(item)) {
+                                auto anotherDual = FindRandomItemThatHasString(meleeWeaponsList, OppositDualHand(item));
+
+                                if (anotherDual != nullptr) {
+                                    npc->PutInInv(anotherDual);
+                                    npc->EquipItem(anotherDual);
+                                    anotherDual->Release();
+                                }
+                            }
+
+                            item->Release();
                         }
 
-                        item->Release();
+                       
 
                         break;
                     }
                 }
 
                 auto equippedRangedItem = npc->GetEquippedRangedWeapon();
-                if (equippedRangedItem != nullptr || randomizer.Random(0, 100) >= 70) {
+                if (equippedRangedItem != nullptr || randomizer.Random(0, 100) >= 50) {
                     for (;;) {
                         int weaponId = rangedWeaponsList[randomizer.Random(0, rangedWeaponsList.GetNumInList())];
                         oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
@@ -63,11 +72,16 @@ namespace GOTHIC_ENGINE {
                             npcsCount += 1;
 
                             if (equippedRangedItem != nullptr) {
-                                npc->UnequipItem(equippedRangedItem);
-
-                                if (!IsIgnoredOrTestItem(equippedRangedItem)) {
-                                    npc->RemoveFromInv(equippedRangedItem, 1);
+                                if (IsIgnoredOrTestItem(equippedRangedItem)) {
+                                    npc->UnequipItem(equippedRangedItem);
                                 }
+                                try {
+                                    if (!IsIgnoredOrTestItem(equippedRangedItem)) {
+                                        npc->RemoveFromInv(equippedRangedItem, 1);
+                                    }
+                                }
+                                catch (int s) {};
+                                equippedRangedItem->Release();
                             }
 
                             npc->PutInInv(item);
