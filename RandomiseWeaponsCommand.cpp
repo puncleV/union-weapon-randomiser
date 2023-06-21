@@ -5,9 +5,8 @@ namespace GOTHIC_ENGINE {
     int (*innerEvalFunc)(const zSTRING&, zSTRING&);
   
 
-    int RandomiseWeapons() {
+    int RandomiseMeleeWeapons() {
         auto meleeWeaponsList = getMeleeWeaponsList();
-        auto rangedWeaponsList = getRangeWeaponsList();
 
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
         auto npcsCount = 0;
@@ -49,11 +48,8 @@ namespace GOTHIC_ENGINE {
                                 if (anotherDual != nullptr) {
                                     npc->PutInInv(anotherDual);
                                     npc->EquipItem(anotherDual);
-                                    anotherDual->Release();
                                 }
                             }
-
-                            item->Release();
                         }
 
                        
@@ -61,9 +57,31 @@ namespace GOTHIC_ENGINE {
                         break;
                     }
                 }
+            }
+        }
+
+        meleeWeaponsList.DeleteList();
+
+        return npcsCount;
+    }
+
+    int RandomiseRangedWeapons(int extraWeaponsPercent) {
+        auto rangedWeaponsList = getRangeWeaponsList();
+
+        oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
+        auto npcsCount = 0;
+
+        if (world) {
+            auto list = world->voblist_npcs;
+            for (size_t i = 0; i < list->GetNumInList(); ++i)
+            {
+                oCNpc* npc = list->Get(i);
+
+                if (npc == oCNpc::player || !npc->IsHuman())
+                    continue;
 
                 auto equippedRangedItem = npc->GetEquippedRangedWeapon();
-                if (equippedRangedItem != nullptr || randomizer.Random(0, 100) >= 50) {
+                if (equippedRangedItem != nullptr || randomizer.Random(0, 100) < extraWeaponsPercent) {
                     for (;;) {
                         int weaponId = rangedWeaponsList[randomizer.Random(0, rangedWeaponsList.GetNumInList())];
                         oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
@@ -71,10 +89,13 @@ namespace GOTHIC_ENGINE {
                         if (npcCanWearWeapon(item, npc)) {
                             npcsCount += 1;
                             // apparantely you dont need to delete existing item :D
+                            if (equippedRangedItem != nullptr) {
+                                npc->UnequipItem(equippedRangedItem);
+                                equippedRangedItem->Release();
+                            }
+
                             npc->PutInInv(item);
                             npc->EquipItem(item);
-
-                            item->Release();
 
                             break;
                         }
@@ -83,7 +104,6 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        meleeWeaponsList.DeleteList();
         rangedWeaponsList.DeleteList();
 
         return npcsCount;
@@ -293,8 +313,22 @@ namespace GOTHIC_ENGINE {
             return true;
 
        
-        if (inpstr.HasWord("RWPNS")) {
-            auto result = RandomiseWeapons();
+        if (inpstr.HasWord("MELEEWPNS")) {
+            auto result = RandomiseMeleeWeapons();
+            msg = "Changed weapons of: " + Z result + " npcs.";
+
+            return true;
+        }
+
+        if (inpstr.HasWord("RANGEDWPNS")) {
+            auto result = RandomiseRangedWeapons(0);
+            msg = "Changed weapons of: " + Z result + " npcs.";
+
+            return true;
+        }
+
+        if (inpstr.HasWord("RANGEDWPNS_ADD")) {
+            auto result = RandomiseRangedWeapons(10);
             msg = "Changed weapons of: " + Z result + " npcs.";
 
             return true;
@@ -323,7 +357,8 @@ namespace GOTHIC_ENGINE {
 
     void RegisterCommands() {
         RegisterEvalFunc();
-        zcon->Register("weaponsrandomizer RWPNS", "Randomize NPCs weapons");
+        zcon->Register("weaponsrandomizer MELEEWPNS", "Randomize NPCs melee weapons");
+        zcon->Register("weaponsrandomizer RANGEDWPNS", "Randomize NPCs ranged weapons");
         zcon->Register("weaponsrandomizer RDRP", "Randomize NPCs weapons");
     }
 }
