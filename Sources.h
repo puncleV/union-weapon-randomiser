@@ -6,6 +6,7 @@
 #include "Randomiser.cpp"
 #include "ItemHelpers.cpp"
 #include "NpcHelper.cpp"
+#include "ShuffleChests.cpp"
 #include "RandomiseWeaponsCommand.cpp"
 #include "Plugin.cpp"
 #pragma endregion

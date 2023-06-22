@@ -312,31 +312,41 @@ namespace GOTHIC_ENGINE {
         if (innerEvalFunc && innerEvalFunc(inpstr, msg))
             return true;
 
+        if (!inpstr.HasWordI("weaponsrandomizer") && !inpstr.HasWordI("chestsrandomizer")) {
+            return false;
+        }
        
-        if (inpstr.HasWord("MELEEWPNS")) {
+        if (inpstr.HasWordI("MELEEWPNS")) {
             auto result = RandomiseMeleeWeapons();
             msg = "Changed weapons of: " + Z result + " npcs.";
 
             return true;
         }
 
-        if (inpstr.HasWord("RANGEDWPNS")) {
+        if (inpstr.HasWordI("RANGEDWPNS")) {
             auto result = RandomiseRangedWeapons(0);
             msg = "Changed weapons of: " + Z result + " npcs.";
 
             return true;
         }
 
-        if (inpstr.HasWord("RANGEDWPNS_ADD")) {
+        if (inpstr.HasWordI("RANGEDWPNS_ADD")) {
             auto result = RandomiseRangedWeapons(10);
             msg = "Changed weapons of: " + Z result + " npcs.";
 
             return true;
         }
 
-        if (inpstr.HasWord("RDRP")) {
+        if (inpstr.HasWordI("RDRP")) {
             auto result = AddRandomDrop();
             msg = "Changed drop of: " + Z result + " npcs.";
+
+            return true;
+        }
+
+        if (inpstr.HasWordI("SHUFFLE")) {
+            auto result = ShuffleChests();
+            msg = "Shuffled container for: " + Z result + " items.";
 
             return true;
         }
@@ -360,5 +370,6 @@ namespace GOTHIC_ENGINE {
         zcon->Register("weaponsrandomizer MELEEWPNS", "Randomize NPCs melee weapons");
         zcon->Register("weaponsrandomizer RANGEDWPNS", "Randomize NPCs ranged weapons");
         zcon->Register("weaponsrandomizer RDRP", "Randomize NPCs weapons");
+        zcon->Register("chestsrandomizer SHUFFLE", "Shuffles chests content");
     }
 }
