@@ -4,32 +4,41 @@
 namespace GOTHIC_ENGINE {
     int ShuffleHerbs() {
 
-        oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
         auto itemsCounter = 0;
 
-        if (world) {
-            zCListSort<oCItem>* arrMob = world->voblist_items;
-            zCArray<oCItem*> herbsArray;
+        if (ogame->GetGameWorld()) {
+            zCArray<zCVob*> arrMob;
 
-            for (auto vob = arrMob->GetNextInList(); vob != nullptr; vob = arrMob->GetNextInList()) {
-                if (vob->GetData()->GetObjectName().StartWith("ITPL")) {
-                    herbsArray.Insert(vob->GetData());
+            ogame->GetGameWorld()->SearchVobListByBaseClass(oCItem::classDef, arrMob, NULL);
+
+            zCArray<zSTRING> herbNames;
+            zCArray<zVEC3> herbPositions;
+
+            for (size_t i = 0; i < arrMob.GetNumInList(); i += 1) {
+                auto item = arrMob[i];
+                if (item->GetObjectName().StartWith("ITPL")) {
+                    
+                    herbNames.Insert(item->GetObjectName());
+                    herbPositions.Insert(item->GetPositionWorld());
+
+                    item->RemoveVobFromWorld();
+                    item->Release();
                 }
             }
 
-            for (size_t i = 0; i < herbsArray.GetNumInList(); ++i)
+            for (size_t i = 0; i < herbNames.GetNumInList(); i += 1)
             {
-                auto herb = herbsArray[i];
+                itemsCounter += 1;
+                auto herbName = herbNames[i];
 
-                auto secondHerbIndex = randomizer.Random(0, i);
-                if (secondHerbIndex == i) {
-                    continue;
-                }
+                auto herb = ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, herbName);
+                auto positionIndex = randomizer.Random(0, herbPositions.GetNumInList() - 1);
+                auto position = herbPositions[positionIndex];
 
-                auto secondHerb = herbsArray[secondHerbIndex];
-                zVEC3 firstHerbPosition = herb->GetPositionWorld();
-                herb->SetPositionWorld(secondHerb->GetPositionWorld());
-                secondHerb->SetPositionWorld(firstHerbPosition);
+                herb->SetPositionWorld(position);
+                ogame->GetGameWorld()->AddVob(herb);
+                herb->Release();
+                herbPositions.RemoveIndex(positionIndex);
             }
         }
 

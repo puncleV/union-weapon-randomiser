@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
                     continue;
 
                 for (;;) {
-                    int weaponId = meleeWeaponsList[randomizer.Random(0, meleeWeaponsList.GetNumInList())];
+                    int weaponId = meleeWeaponsList[randomizer.Random(0, meleeWeaponsList.GetNumInList() - 1)];
                     oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
 
                     if (npcCanWearWeapon(item, npc)) {
@@ -84,19 +84,16 @@ namespace GOTHIC_ENGINE {
                 auto equippedRangedItem = npc->GetEquippedRangedWeapon();
                 if (equippedRangedItem != nullptr || randomizer.Random(0, 100) < extraWeaponsPercent) {
                     for (;;) {
-                        int weaponId = rangedWeaponsList[randomizer.Random(0, rangedWeaponsList.GetNumInList())];
+                        int weaponId = rangedWeaponsList[randomizer.Random(0, rangedWeaponsList.GetNumInList() - 1)];
                         oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
 
                         if (npcCanWearWeapon(item, npc)) {
                             npcsCount += 1;
-                            // apparantely you dont need to delete existing item :D
-                            if (equippedRangedItem != nullptr) {
-                                npc->UnequipItem(equippedRangedItem);
-                                equippedRangedItem->Release();
-                            }
-
+                            // apparantely you dont need to delete existing item 
                             npc->PutInInv(item);
                             npc->EquipItem(item);
+
+                            item->Release();
 
                             break;
                         }
@@ -322,7 +319,7 @@ namespace GOTHIC_ENGINE {
     bool chestsRandomizerHandler(const zSTRING& inpstr, zSTRING& msg) {
         if (inpstr.HasWordI("SHUFFLE")) {
             auto result = ShuffleChests();
-            msg = "Shuffled herbs count: " + Z result;
+            msg = "Shuffled container for: " + Z result + " items.";
 
             return true;
         }
@@ -331,7 +328,7 @@ namespace GOTHIC_ENGINE {
     bool herbsRandomizerHandler(const zSTRING& inpstr, zSTRING& msg) {
         if (inpstr.HasWordI("SHUFFLE")) {
             auto result = ShuffleHerbs();
-            msg = "Shuffled container for: " + Z result + " items.";
+            msg = "Shuffled herbs count: " + Z result;
 
             return true;
         }

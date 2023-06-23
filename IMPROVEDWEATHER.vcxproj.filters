@@ -2790,6 +2790,12 @@
     <ClInclude Include="ItemHelpers.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
+    <ClInclude Include="ShuffleChests.cpp">
+      <Filter>Plugin\Workspace\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="ShuffleHerbs.cpp">
+      <Filter>Plugin\Workspace\Plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

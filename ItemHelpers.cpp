@@ -95,7 +95,7 @@ namespace GOTHIC_ENGINE {
 
             oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, i));
 
-            if (item == nullptr || item->mainflag != ITM_CAT_FF || IsIgnoredOrTestItem(item)) {
+            if (item == nullptr || !(item->HasFlag(ITM_FLAG_BOW) || item->HasFlag(ITM_FLAG_CROSSBOW)) || IsIgnoredOrTestItem(item)) {
                 continue;
             }
             item->Release();
