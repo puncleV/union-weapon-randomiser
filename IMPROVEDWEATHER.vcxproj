@@ -909,6 +909,10 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ShuffleHerbs.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Sources.h" />
     <ClInclude Include="UnionAfx.h" />
     <ClInclude Include="ZenGin\Gothic_II_Addon\API\oAiHuman.h" />

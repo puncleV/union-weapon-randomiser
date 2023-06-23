@@ -17,4 +17,9 @@ namespace GOTHIC_ENGINE {
 
         return true;
 	}
+
+    const int AIV_BOSS = 90;
+    bool RX_IsBoss(oCNpc* npc) {
+        return (npc && npc->aiscriptvars[AIV_BOSS] == TRUE);
+    }
 }

@@ -29,9 +29,6 @@ namespace GOTHIC_ENGINE {
   }
 
   void Game_Loop() {
-      auto vob = player->GetFocusVob();
-      if (vob != nullptr)
-          screen->PrintCXY(vob->GetVobInfo() + vob->GetObjectName());
   }
 
   void Game_PostLoop() {
