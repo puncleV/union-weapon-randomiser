@@ -253,7 +253,6 @@ namespace GOTHIC_ENGINE {
             }
 
             npc->PutInInv(item);
-            player->PutInInv(item);
 
             item->Release();
         }
