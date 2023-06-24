@@ -16,7 +16,7 @@ namespace GOTHIC_ENGINE {
 
             for (size_t i = 0; i < arrMob.GetNumInList(); i += 1) {
                 auto item = arrMob[i];
-                if (item->GetObjectName().StartWith("ITPL")) {
+                if (item->GetObjectName().StartWith("ITPL") && !item->GetObjectName().HasWordI("BEET") && !item->GetObjectName().HasWordI("SUPER_HERB")) {
                     
                     herbNames.Insert(item->GetObjectName());
                     herbPositions.Insert(item->GetPositionWorld());
@@ -38,6 +38,7 @@ namespace GOTHIC_ENGINE {
                 herb->SetPositionWorld(position);
                 ogame->GetGameWorld()->AddVob(herb);
                 herb->Release();
+
                 herbPositions.RemoveIndex(positionIndex);
             }
         }

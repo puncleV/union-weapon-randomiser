@@ -49,10 +49,13 @@ namespace GOTHIC_ENGINE {
                                 if (anotherDual != nullptr) {
                                     npc->PutInInv(anotherDual);
                                     npc->EquipItem(anotherDual);
+                                    anotherDual->Release();
                                 }
                             }
+
                         }
 
+                        item->Release();
 
 
                         break;
@@ -82,12 +85,17 @@ namespace GOTHIC_ENGINE {
                     continue;
 
                 auto equippedRangedItem = npc->GetEquippedRangedWeapon();
-                if (equippedRangedItem != nullptr || randomizer.Random(0, 100) < extraWeaponsPercent) {
+                if (npc->GetEquippedRangedWeapon() != nullptr || randomizer.Random(0, 100) < extraWeaponsPercent) {
                     for (;;) {
                         int weaponId = rangedWeaponsList[randomizer.Random(0, rangedWeaponsList.GetNumInList() - 1)];
                         oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
 
                         if (npcCanWearWeapon(item, npc)) {
+                            if (npc->GetEquippedRangedWeapon() != nullptr) {
+                                    npc->UnequipItem(npc->RemoveFromInv(equippedRangedItem, 1));
+                                    equippedRangedItem->Release();
+                            }
+
                             npcsCount += 1;
                             // apparantely you dont need to delete existing item 
                             npc->PutInInv(item);
@@ -97,6 +105,7 @@ namespace GOTHIC_ENGINE {
 
                             break;
                         }
+
                     }
                 }
             }
@@ -112,8 +121,8 @@ namespace GOTHIC_ENGINE {
             return name;
         }
 
-        std::array < zSTRING, 6> itemNames = { "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITPO_INTELLECT", "ITMI_POTIONPERMBLANK", "ITPO_TROLL_STAMINA" };
-        return "ITMI_GOLD";
+        std::array < zSTRING, 8> itemNames = { "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITPO_INTELLECT", "ITPO_NP_MANAREG3", "ITPO_TROLL_STAMINA", "ITPO_HEALTH_03", "ITPO_MANA_03" };
+        return itemNames[randomizer.Random(1, itemNames.size() - 1)];
     }
 
     zCArray<zSTRING> getRandomLootNames() {
@@ -216,12 +225,65 @@ namespace GOTHIC_ENGINE {
             names.Insert(itemNames[randomizer.Random(0, itemNames.size() - 1)]);
         }
         
-        if (randomizer.Random(0, 1000) > 700) { // 30%
+        if (randomizer.Random(0, 1000) > 600) { // 40%
             std::array<zSTRING, 33> itemNames = {
                 "ITMI_GOLD", "ITPL_BEET", "ITRW_ADDON_MAGICARROW", "ITRW_EXPLOSIVEBOLT", "ITRW_BOLT", "ITRW_ARROW", "ITFO_BEER", "ITFO_APPLE", "ITFO_BREAD", "ITFO_BOOZE", "ITFO_WATER",
                 "ITFO_WINE", "ITFO_WINEBERRYS", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_ADDON_RUM", "ITFO_ADDON_SHELLFLESH", "ITFO_SMELLYFISH", "ITMI_BRUSH", "ITAT_CLAW", "ITSC_FIREBOLT",
                 "ITSC_ICEBOLT", "ITSC_LIGHT", "ITSC_ZAP", "ITSC_DEATHBOLT", "ITSC_SUMWOLF", "ITSC_SUMGOBSKEL", "ITPL_MANA_HERB_01", "ITPL_HEALTH_HERB_01", "ITPL_MUSHROOM_01", "ITPL_BLUEPLANT",
                 "ITPL_FORESTBERRY", "ITPL_PLANEBERRY", "ITMI_SNUGGET"
+            };
+
+            names.Insert(itemNames[randomizer.Random(0, itemNames.size() - 1)]);
+        }
+
+        if (randomizer.Random(0, 1000) > 900) { // 10%
+            std::array<zSTRING, 32> itemNames = {
+                "ITRU_FIREBOLT",
+                "ITRU_ZAP",
+                "ITRU_ICEBOLT",
+                "ITRU_SLEEP",
+                "ITRU_BERZERK",
+                "ITRU_DEATHBOLT",
+                "ITRU_SUMGOBSKEL",
+                "ITRU_SUMWOLF",
+            };
+
+            names.Insert(itemNames[randomizer.Random(0, itemNames.size() - 1)]);
+        }
+
+        if (randomizer.Random(0, 1000) > 930) { // 7%
+            std::array<zSTRING, 11> itemNames = {
+                "ITRU_INSTANTFIREBALL",
+                "ITRU_STONEFIRST",
+                "ITRU_ICELANCE",
+                "ITRU_SUMSHOAL",
+                "ITRU_WINDFIST",
+                "ITRU_FIRESTORM",
+                "ITRU_ICECUBE",
+                "ITRU_THUNDERBALL",
+                "ITRU_MAGSPHERE",
+                "ITRU_CHARM",
+                "ITRU_SUMSKEL",
+            };
+
+            names.Insert(itemNames[randomizer.Random(0, itemNames.size() - 1)]);
+        }
+
+        if (randomizer.Random(0, 1000) > 960) { // 4%
+            std::array<zSTRING, 13> itemNames = {
+                "ITRU_BELIARSRAGE",
+                "ITRU_ICEEXPLOISION",
+                "ITRU_SUMMONGUARDIAN",
+                "ITRU_SUMGOL",
+                "ITRU_SUMFIREGOL",
+                "ITRU_ACID",
+                "ITRU_SUMSWPGOL",
+                "ITRU_CHARGEFIREBALL",
+                "ITRU_LIGHTNINGFLASH",
+                "ITRU_LIGHTNINGSPHERE",
+                "ITRU_ELECTROWAVE",
+                "ITRU_SUMICEGOL",
+                "ITRU_DEATHBALL",
             };
 
             names.Insert(itemNames[randomizer.Random(0, itemNames.size() - 1)]);
@@ -300,7 +362,7 @@ namespace GOTHIC_ENGINE {
         }
 
         if (inpstr.HasWordI("RANGEDWPNS_ADD")) {
-            auto result = RandomiseRangedWeapons(10);
+            auto result = RandomiseRangedWeapons(20);
             msg = "Changed weapons of: " + Z result + " npcs.";
 
             return true;

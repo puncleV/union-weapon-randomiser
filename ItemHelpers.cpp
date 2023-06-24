@@ -17,7 +17,7 @@ namespace GOTHIC_ENGINE {
             item->GetObjectName().HasWordI("ADANOSMOLOT") || item->GetObjectName().HasWordI("ASSBLADE") || item->GetObjectName().HasWordI("HOLY_HAMMER") || item->GetObjectName().HasWordI("ALRIKSSWORD") ||
             item->GetObjectName().HasWordI("ITMW_2H_ROD") || item->GetObjectName().HasWordI("DS_MONWEAPON_HALLOWEEN") || item->GetObjectName().HasWordI("GREATARBALET") || item->GetObjectName().HasWordI("MAGICCOSSBOW") ||
             item->GetObjectName().HasWordI("FAKESWORD") || item->GetObjectName().HasWordI("PAL_CLOACK") || item->GetObjectName().HasWordI("SENYAK") || item->GetObjectName().HasWordI("HALLEBERDE_CLAW") || item->GetObjectName().HasWordI("ITMW_STAFF_CLAW") ||
-            item->GetObjectName().HasWordI("ITMW_1H_THIEF_01_RIGHT");
+            item->GetObjectName().HasWordI("ITMW_1H_THIEF_01_RIGHT") || item->GetObjectName().StartWith("ITKE_");
     }
 
     bool IsItemSymbol(zCPar_Symbol* symbol) {
@@ -95,7 +95,7 @@ namespace GOTHIC_ENGINE {
 
             oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, i));
 
-            if (item == nullptr || !(item->HasFlag(ITM_FLAG_BOW) || item->HasFlag(ITM_FLAG_CROSSBOW)) || IsIgnoredOrTestItem(item)) {
+            if (item == nullptr || item->mainflag != ITM_CAT_FF || IsIgnoredOrTestItem(item)) {
                 continue;
             }
             item->Release();
