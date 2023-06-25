@@ -8,6 +8,8 @@
 #include "NpcHelper.cpp"
 #include "ShuffleChests.cpp"
 #include "ShuffleHerbs.cpp"
+#include "Loot.cpp"
+#include "AddRandomLootCommand.cpp"
 #include "RandomiseWeaponsCommand.cpp"
 #include "Plugin.cpp"
 #pragma endregion

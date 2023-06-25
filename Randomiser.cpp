@@ -22,6 +22,11 @@ namespace GOTHIC_ENGINE {
             std::uniform_int_distribution<unsigned> distrib(min, max);
             return distrib(gen);
         }
+
+        template<std::size_t SIZE>
+        zSTRING getRandomArrayElement(std::array<zSTRING, SIZE> elements) {
+            return elements[Random(0, elements.size() - 1)];
+        }
     };
 
     Randomizer randomizer;

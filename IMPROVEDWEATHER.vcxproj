@@ -870,6 +870,14 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClInclude Include="AddRandomLootCommand.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Loot.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ItemHelpers.cpp">
       <SubType>
       </SubType>
