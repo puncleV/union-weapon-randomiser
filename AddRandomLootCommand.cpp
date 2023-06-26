@@ -74,8 +74,8 @@ namespace GOTHIC_ENGINE {
             })
     };
 
-    std::array < zSTRING, 34> defaultLoot = {
-        "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2", "ITFO_POTTAGE_MUSHROOM", "ITFO_POTTAGE_MUSHROOM",
+    std::array < zSTRING, 35> defaultLoot = {
+        "ITMI_GOLD", "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITFO_POTTAGE_MUSHROOM_BLACK",
         "ITFO_POTTAGE_MUSHROOM", "ITFO_COMPOTE_00", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_WINE_GRITTA",
         "ITMI_ADDON_JOINT_01", "ITMI_JOINT_02", "ITMI_JOINT_03", "ITFO_SMELLYFISH", "ITFO_ADDON_RUM_SKIP", "ITPO_NP_STAMINA", "ITFOMUTTON_NICLAS",
         "ITFO_XPSTEW", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_HONEY", "ITFO_HILDASTEW",
@@ -185,7 +185,7 @@ namespace GOTHIC_ENGINE {
                     addRandomLootToNpc(npc, addToPlayer);
                     addRandomLootToNpc(npc, addToPlayer);
                 }
-                else if (randomizer.Random(0, 1000) >= 850) {
+                else if (randomizer.Random(0, 1000) >= 860) {
                     npcsCount += 1;
                     addRandomLootToNpc(npc, addToPlayer);
                 }
