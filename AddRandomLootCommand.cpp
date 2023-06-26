@@ -1,10 +1,12 @@
 #include <array>
 namespace GOTHIC_ENGINE {
-    std::array < Loot<33>, 15> LOOT_TABLE = {
+    std::array < Loot<33>, 17> LOOT_TABLE = {
+         Loot<33>(5, 1000, false, { "ITPO_PERM_DEF" }),
          Loot<33>(10, 1000, false, { "ITPO_NP_STATS" }),
          Loot<33>(15, 1000, true, { "ITRI_ORE_DIAM", "ITRI_ORE_EMER", "ITRI_ORE_SAPP", "ITRI_ORE_OPAL", "ITRI_ORE_TOPA", "ITRI_ORE_RUBY" }),
+         Loot<33>(15, 1000, false, { "ITPO_FIREDEFENCE", "ITPO_MAGDEFENCE" }),
          Loot<33>(20, 1000, false, { "ITMI_POTIONPERMBLANK", "ITPO_INTELLECT", "ITPO_ELIXIRSHADOW", "ITSC_TRFDRAGONSNAPPER", "ITPL_PERM_HERB", "ITPO_NP_MANAREG3" }),
-         Loot<33>(40, 1000, false, { "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_HONEY", "ITFO_EALBALZAM", "ITFO_EALBALZAMTWO", "ITPL_PERM_HERB", "ITMI_JEWELERYCHEST", "ITPO_HEALTH_03", "ITPO_MANA_03", "ITPO_NP_MANAREG2", "ITPO_NP_STAMINA" }),
+         Loot<33>(50, 1000, false, { "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_HONEY", "ITFO_EALBALZAM", "ITFO_EALBALZAMTWO", "ITPL_PERM_HERB", "ITMI_JEWELERYCHEST", "ITPO_HEALTH_03", "ITPO_MANA_03", "ITPO_NP_MANAREG2", "ITPO_NP_STAMINA" }),
          Loot<33>(50, 1000, true, {
                 "ITAM_DIAMOND",
                 "ITAM_RUBY",
@@ -72,11 +74,12 @@ namespace GOTHIC_ENGINE {
             })
     };
 
-    std::array < zSTRING, 23> defaultLoot = {
-        "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2",
-        "ITPO_PERM_STAMINA", "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_HONEY", 
-        "ITFO_EALBALZAM", "ITFO_EALBALZAMTWO", "ITFO_POTTAGE_MUSHROOM", "ITFO_COMPOTE_00", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_WINE_GRITTA",
-        "ITMI_ADDON_JOINT_01", "ITMI_JOINT_02", "ITMI_JOINT_03", "ITFO_SMELLYFISH", "ITFO_ADDON_RUM_SKIP", "ITPO_NP_STAMINA"
+    std::array < zSTRING, 34> defaultLoot = {
+        "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2", "ITFO_POTTAGE_MUSHROOM", "ITFO_POTTAGE_MUSHROOM",
+        "ITFO_POTTAGE_MUSHROOM", "ITFO_COMPOTE_00", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_WINE_GRITTA",
+        "ITMI_ADDON_JOINT_01", "ITMI_JOINT_02", "ITMI_JOINT_03", "ITFO_SMELLYFISH", "ITFO_ADDON_RUM_SKIP", "ITPO_NP_STAMINA", "ITFOMUTTON_NICLAS",
+        "ITFO_XPSTEW", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_HONEY", "ITFO_HILDASTEW",
+        "ITSC_FIREBOLT", "ITSC_ICEBOLT", "ITSC_LIGHT", "ITSC_ZAP", "ITSC_DEATHBOLT", "ITSC_SUMWOLF", "ITSC_SUMGOBSKEL"
     };
 
     zCArray<zSTRING> randomLootGiven;
@@ -112,18 +115,26 @@ namespace GOTHIC_ENGINE {
     }
     
     int getRandomItemAmount(oCItem* item) {
-        if (item->GetObjectName().HasWordI("ITPO_NP_STATS") || item->GetObjectName().HasWordI("ITAM") || item->GetObjectName().HasWordI("ITWR")
-            || item->GetObjectName().HasWordI("ITRI") || item->GetObjectName().HasWordI("ITBE")) {
+        auto itemName = item->GetObjectName();
+        
+        if (itemName.HasWordI("ITPO_NP_STATS") || itemName.HasWordI("ITAM") || itemName.HasWordI("ITWR")
+            || itemName.HasWordI("ITRI") || itemName.HasWordI("ITBE") || itemName.HasWordI("ITPO_PERM_DEF")
+            || itemName.HasWordI("ITPO_FIREDEFENCE") || itemName.HasWordI("ITPO_MAGDEFENCE")) {
             return 1;
         }
 
-        if (item->GetObjectName().HasWordI("ITRW")) {
+        if (itemName.HasWordI("ITRW")) {
             return randomizer.Random(10, 30);
         }
 
         auto maxAmount = 10;
+
         if (IsTooCoolLoot(item)) {
             maxAmount = 2;
+        }
+        else if (itemName.StartWith("ITFO"))
+        {
+            maxAmount = 4;
         }
 
         return randomizer.Random(1, maxAmount);
@@ -174,7 +185,7 @@ namespace GOTHIC_ENGINE {
                     addRandomLootToNpc(npc, addToPlayer);
                     addRandomLootToNpc(npc, addToPlayer);
                 }
-                else if (randomizer.Random(0, 1000) >= 800) {
+                else if (randomizer.Random(0, 1000) >= 850) {
                     npcsCount += 1;
                     addRandomLootToNpc(npc, addToPlayer);
                 }
