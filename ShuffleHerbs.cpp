@@ -5,20 +5,23 @@ namespace GOTHIC_ENGINE {
     int ShuffleHerbs() {
 
         auto itemsCounter = 0;
+        auto world = ogame->GetGameWorld();
 
-        if (ogame->GetGameWorld()) {
+        if (world) {
             zCArray<zCVob*> arrMob;
 
-            ogame->GetGameWorld()->SearchVobListByBaseClass(oCItem::classDef, arrMob, NULL);
+            world->SearchVobListByBaseClass(oCItem::classDef, arrMob, NULL);
 
             zCArray<zSTRING> herbNames;
             zCArray<zVEC3> herbPositions;
 
-            for (size_t i = 0; i < arrMob.GetNumInList(); i += 1) {
+            for (size_t i = 0; i < arrMob.GetNumInList(); ++i) {
                 auto item = arrMob[i];
-                if (item->GetObjectName().StartWith("ITPL") && !item->GetObjectName().HasWordI("BEET") && !item->GetObjectName().HasWordI("SUPER_HERB")) {
+                auto itemName = item->GetObjectName();
+
+                if (itemName.StartWith("ITPL") && !itemName.HasWordI("BEET") && !itemName.HasWordI("SUPER_HERB")) {
                     
-                    herbNames.Insert(item->GetObjectName());
+                    herbNames.Insert(itemName);
                     herbPositions.Insert(item->GetPositionWorld());
 
                     item->RemoveVobFromWorld();
@@ -26,17 +29,17 @@ namespace GOTHIC_ENGINE {
                 }
             }
 
-            for (size_t i = 0; i < herbNames.GetNumInList(); i += 1)
+            for (size_t i = 0; i < herbNames.GetNumInList(); ++i)
             {
                 itemsCounter += 1;
                 auto herbName = herbNames[i];
 
-                auto herb = ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, herbName);
                 auto positionIndex = randomizer.Random(0, herbPositions.GetNumInList() - 1);
                 auto position = herbPositions[positionIndex];
 
+                auto herb = world->CreateVob_novt(zVOB_TYPE_ITEM, herbName);
                 herb->SetPositionWorld(position);
-                ogame->GetGameWorld()->AddVob(herb);
+                world->AddVob(herb);
                 herb->Release();
 
                 herbPositions.RemoveIndex(positionIndex);
