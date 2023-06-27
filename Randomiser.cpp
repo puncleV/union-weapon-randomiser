@@ -19,7 +19,7 @@ namespace GOTHIC_ENGINE {
         };
 
         int Random(int min, int max) {
-            std::uniform_int_distribution<unsigned> distrib(min, max);
+            std::uniform_int_distribution<unsigned> distrib((((min) < (max)) ? (min) : (max)), (((min) > (max)) ? (min) : (max)));
             return distrib(gen);
         }
 
