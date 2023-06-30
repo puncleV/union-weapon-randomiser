@@ -49,7 +49,7 @@ namespace GOTHIC_ENGINE {
 		return (npc && npc->aiscriptvars[AIV_BOSS] == TRUE);
 	}
 
-	bool RX_IsTrader(oCNpc* npc) {
+	bool RX_IsAlchemistTrader(oCNpc* npc) {
 		auto npcName = npc->GetObjectName();
 
 		for (auto i = 0; i < alchemistsList.size(); i += 1) {
@@ -58,11 +58,23 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		return FALSE;
+	}
+
+	bool RX_IsMageTrader(oCNpc* npc) {
+		auto npcName = npc->GetObjectName();
+
 		for (auto i = 0; i < magicTraderList.size(); i += 1) {
 			if (npcName.HasWordI(magicTraderList[i])) {
 				return TRUE;
 			}
 		}
+
+		return FALSE;
+	}
+
+	bool RX_IsTrader(oCNpc* npc) {
+		auto npcName = npc->GetObjectName();
 
 		for (auto i = 0; i < miscTradersList.size(); i += 1) {
 			if (npcName.HasWordI(miscTradersList[i])) {
@@ -70,7 +82,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		return FALSE;
+		return RX_IsMageTrader(npc) || RX_IsAlchemistTrader(npc);
 	}
 
 	

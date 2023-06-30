@@ -31,7 +31,7 @@ namespace GOTHIC_ENGINE {
 		return randomizer.getRandomArrayElement(defaultLoot);
 	}
 
-	void addLootToNpc(oCNpc* npc, Loot loot,  bool addToPlayer = false) {
+	void addLootToNpc(oCNpc* npc, Loot loot, bool addToPlayer = false) {
 		auto itemName = getDeduplicatedLoot(loot);
 
 		if (itemName == "") {
@@ -96,16 +96,30 @@ namespace GOTHIC_ENGINE {
 				if (npc == oCNpc::player)
 					continue;
 
-				if (RX_IsTrader(npc)) {
+				if (RX_IsMageTrader(npc)) {
+					addRandomLootToNpc(npc, addToPlayer);
+					addRandomLootToNpc(npc, addToPlayer);
+
+					addLootToNpc(npc, magicLoot);
+				}
+				else if (RX_IsAlchemistTrader(npc)) {
+					addRandomLootToNpc(npc, addToPlayer);
+					addRandomLootToNpc(npc, addToPlayer);
+
+					addLootToNpc(npc, alchemistLoot);
+				}
+				else if (RX_IsTrader(npc)) {
 					npcsCount += 1;
 
-					addLootToNpc(npc, tradersLoot);
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
-				} else if (RX_IsBoss(npc)) {
+					addRandomLootToNpc(npc, addToPlayer);
+				}
+				else if (RX_IsBoss(npc)) {
 					npcsCount += 1;
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
+					addLootToNpc(npc, bossLoot);
 				}
 				else if (randomizer.Random(0, 1000) >= getExtraLootComplementaryProbability(npc)) {
 					npcsCount += 1;
