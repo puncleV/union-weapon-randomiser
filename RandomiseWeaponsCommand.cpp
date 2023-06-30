@@ -156,6 +156,14 @@ namespace GOTHIC_ENGINE {
 
             return true;
         }
+
+        if (inpstr.HasWordI("ADD")) {
+            auto result = AddChestsLoot(inpstr.HasWordI("ADD_TO_PLAYER"));
+
+            msg = "Added: " + Z result + " items.";
+
+            return true;
+        }
     }
 
     bool herbsRandomizerHandler(const zSTRING& inpstr, zSTRING& msg) {
@@ -208,6 +216,7 @@ namespace GOTHIC_ENGINE {
         zcon->Register("weaponsrandomizer RANGEDWPNS", "Randomize NPCs ranged weapons");
         zcon->Register("lootrandomizer ADD", "Randomize NPCs weapons");
         zcon->Register("chestsrandomizer SHUFFLE", "Shuffles chests content");
+        zcon->Register("chestsrandomizer ADD", "Add chests content");
         zcon->Register("herbsrandomizer SHUFFLE", "Shuffles hrebs positions");
     }
 }

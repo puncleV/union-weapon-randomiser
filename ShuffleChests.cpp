@@ -3,7 +3,6 @@
 
 namespace GOTHIC_ENGINE {
     int ShuffleChests() {
-
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
         auto itemsCounter = 0;
 
@@ -60,6 +59,56 @@ namespace GOTHIC_ENGINE {
 
                 firstChestItems.DeleteList();
                 secondChestItems.DeleteList();
+            }
+        }
+
+        return itemsCounter;
+    }
+
+    void addRandomLootToChest(oCMobContainer* chest, bool shouldAddToPlaer = false) {
+        for (size_t i = 0; i < LOOT_TABLE.size(); ++i)
+        {
+            auto loot = LOOT_TABLE[i];
+            auto itemName = getDeduplicatedLoot(loot);
+
+            if (itemName == "") {
+                continue;
+            }
+
+            oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, itemName));
+
+            if (item->HasFlag(ITM_FLAG_MULTI)) {
+                item->amount = getRandomItemAmount(item);
+            }
+
+            if (shouldAddToPlaer) {
+                player->PutInInv(item);
+            }
+            else {
+                chest->Insert(item);
+            }
+
+            item->Release();
+        }
+    }
+
+    int AddChestsLoot(bool shouldAddToPlaer = false) {
+        oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
+        auto itemsCounter = 0;
+
+        if (world) {
+            zCArray<zCVob*> arrMob;
+
+            world->SearchVobListByClass(oCMobContainer::classDef, arrMob, NULL);
+
+            for (size_t i = 0; i < arrMob.GetNumInList(); ++i)
+            {
+                oCMobContainer* firstChest = dynamic_cast<oCMobContainer*> (arrMob[i]);
+
+                if (randomizer.Random(0, 1000) >= 1000 - EXTRA_LOOT_CHEST_BASE_CHANCE()) {
+                    addRandomLootToChest(firstChest, shouldAddToPlaer);
+                    itemsCounter += 1;
+                }
             }
         }
 

@@ -4,15 +4,15 @@
 #include <array>
 namespace GOTHIC_ENGINE {
 
-    template<std::size_t SIZE> class Loot {
+    class Loot {
     private:
-        std::array <zSTRING, SIZE> possibleLootNames;
+        std::vector <zSTRING> possibleLootNames;
         int chanceWeight;
         int chanceUpperbound;
     public:
         bool shouldDeduplicate;
 
-        Loot(int _chanceWeight, int _chanceUpperbound, bool _shouldDeduplicate, std::array <zSTRING, SIZE> _possibleLootNames) {
+        Loot(int _chanceWeight, int _chanceUpperbound, bool _shouldDeduplicate, std::vector <zSTRING> _possibleLootNames) {
             possibleLootNames = _possibleLootNames;
             chanceWeight = _chanceWeight;
             chanceUpperbound = _chanceUpperbound;
@@ -21,13 +21,10 @@ namespace GOTHIC_ENGINE {
 
         zSTRING pick() {
             if (randomizer.Random(0, chanceUpperbound) <= chanceWeight) {
-                for (;;) {
-                    // i am too lazy to find a way to work with different sized arrays in loot table so here we are.
-                    auto element = randomizer.getRandomArrayElement<SIZE>(possibleLootNames);
+                auto element = possibleLootNames[randomizer.Random(0, possibleLootNames.size() - 1)];;
 
-                    if (element != "") {
-                        return element;
-                    }
+                if (element != "") {
+                    return element;
                 }
             }
 
