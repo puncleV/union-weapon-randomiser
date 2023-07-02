@@ -8,8 +8,24 @@ namespace GOTHIC_ENGINE {
 		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootChance", 15);
 	}
 
-	auto const EXTRA_LOOT_HP_FACTOR() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFcator", 400);
+	auto const EXTRA_LOOT_HP_FACTOR_HORINIS() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorHorinis", 400);
+	}
+
+	auto const EXTRA_LOOT_HP_FACTOR_OTHER() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorOther", 700);
+	}
+
+	auto const EXTRA_LOOT_HP_FACTOR_MULTIPLIER() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorMultiplier", 25);
+	}
+
+	auto const EXTRA_LOOT_HORINIS_FACTOR() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHorinisFactor", 1000);
+	}
+
+	auto const EXTRA_LOOT_OTHER_FACTOR() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootOtherFactor", 1250);
 	}
 
 	auto const EXTRA_LOOT_CHEST_BASE_CHANCE() {
@@ -30,5 +46,9 @@ namespace GOTHIC_ENGINE {
 
 	auto const ENEMY_DEFENCE_PER_MULTIPLIER() {
 		return zoptions->ReadInt("PUNCLEVUTILS", "StrengthenEnemyDefencePerMultiplier", 3);
+	}
+
+	auto const ENEMY_HP_FACTOR() {
+		return zoptions->ReadInt("PUNCLEVUTILS", "StrengthenEnemyBaseHP", 150);
 	}
 }

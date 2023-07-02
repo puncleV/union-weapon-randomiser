@@ -51,8 +51,8 @@ namespace GOTHIC_ENGINE {
 			npc->PutInInv(item);
 
 			auto addStrengthMultiplier = (int)(item->value / VALUE_STRENGTH_PER_LOOT_MULTIPLIER()) + BASE_STRENGTH_PER_LOOT_MULTIPLIER();
-			auto extaHpBasePercent = 150 / npc->attribute[NPC_ATR_HITPOINTSMAX];
-			int additionalHp = randomizer.Random(15 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
+			auto extaHpBasePercent = ENEMY_HP_FACTOR() / npc->attribute[NPC_ATR_HITPOINTSMAX];
+			int additionalHp = randomizer.Random(50 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
 
 			npc->attribute[NPC_ATR_HITPOINTSMAX] += additionalHp;
 			npc->attribute[NPC_ATR_HITPOINTS] += additionalHp;
@@ -68,17 +68,17 @@ namespace GOTHIC_ENGINE {
 		item->Release();
 	}
 
-	void addRandomLootToNpc(oCNpc* npc, bool addToPlayer = false) {
-		for (size_t i = 0; i < NPC_LOOT_TABLE.size(); ++i)
+	void addRandomLootToNpc(oCNpc* npc, bool addToPlayer = false, std::vector<Loot> lootTable = NPC_LOOT_TABLE) {
+		for (size_t i = 0; i < lootTable.size(); ++i)
 		{
-			auto loot = NPC_LOOT_TABLE[i];
+			auto loot = lootTable[i];
 			addLootToNpc(npc, loot, addToPlayer);
 		}
 	}
 
-
-	int getExtraLootComplementaryProbability(oCNpc* npc) {
-		auto chance = 1000 - EXTRA_LOOT_BASE_CHANCE() - ((int)npc->attribute[NPC_ATR_HITPOINTSMAX] / EXTRA_LOOT_HP_FACTOR()) * 25;
+	int getExtraLootProbability(oCNpc* npc, oCWorld* world) {
+		auto hpFactor = world->GetObjectName().HasWordI("NEWWORLD") ? EXTRA_LOOT_HP_FACTOR_HORINIS() : EXTRA_LOOT_HP_FACTOR_OTHER();
+		auto chance =  EXTRA_LOOT_BASE_CHANCE() + ((int)npc->attribute[NPC_ATR_HITPOINTSMAX] / hpFactor) * EXTRA_LOOT_HP_FACTOR_MULTIPLIER();
 
 		return max(chance, 10);
 	}
@@ -86,8 +86,10 @@ namespace GOTHIC_ENGINE {
 	int AddRandomLoot(bool addToPlayer = false) {
 		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
 		auto npcsCount = 0;
-
 		if (world) {
+			auto randomUpperBound = getRandomLootUpperound(world);
+			auto hpFactor = world->GetObjectName().HasWordI("NEWWORLD") ? EXTRA_LOOT_HP_FACTOR_HORINIS() : EXTRA_LOOT_HP_FACTOR_OTHER();
+
 			auto list = world->voblist_npcs;
 			for (size_t i = 0; i < list->GetNumInList(); ++i)
 			{
@@ -100,13 +102,13 @@ namespace GOTHIC_ENGINE {
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
 
-					addLootToNpc(npc, magicLoot);
+					addLootToNpc(npc, magicLoot, addToPlayer);
 				}
 				else if (RX_IsAlchemistTrader(npc)) {
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
 
-					addLootToNpc(npc, alchemistLoot);
+					addLootToNpc(npc, alchemistLoot, addToPlayer);
 				}
 				else if (RX_IsTrader(npc)) {
 					npcsCount += 1;
@@ -119,13 +121,13 @@ namespace GOTHIC_ENGINE {
 					npcsCount += 1;
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
-					addLootToNpc(npc, bossLoot);
+					addRandomLootToNpc(npc, addToPlayer, bossLoot);
 				}
-				else if (randomizer.Random(0, 1000) >= getExtraLootComplementaryProbability(npc)) {
+				else if (randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 					npcsCount += 1;
 					addRandomLootToNpc(npc, addToPlayer);
 
-					if (npc->attribute[NPC_ATR_HITPOINTSMAX] >= 500 && randomizer.Random(0, 1000) >= getExtraLootComplementaryProbability(npc)) {
+					if (npc->attribute[NPC_ATR_HITPOINTSMAX] >= hpFactor && randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 						addRandomLootToNpc(npc, addToPlayer);
 					}
 				}

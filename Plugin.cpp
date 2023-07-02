@@ -25,7 +25,6 @@ namespace GOTHIC_ENGINE {
 		
 		if (overrideLootTable) {
 			NPC_LOOT_TABLE.clear();
-			CHESTS_LOOT_TABLE.clear();
 		}
 		
 		for (auto i = 0;; i += 1) {
@@ -51,7 +50,6 @@ namespace GOTHIC_ENGINE {
 
 			if (itemNames.size() > 0) {
 				NPC_LOOT_TABLE.push_back(Loot(chance, chanceOutOf, false, itemNames));
-				CHESTS_LOOT_TABLE.push_back(Loot(chance, chanceOutOf, false, itemNames));
 			}
 		}
 	}

@@ -65,10 +65,10 @@ namespace GOTHIC_ENGINE {
         return itemsCounter;
     }
 
-    void addRandomLootToChest(oCMobContainer* chest, bool shouldAddToPlaer = false) {
-        for (size_t i = 0; i < CHESTS_LOOT_TABLE.size(); ++i)
+    void addRandomLootToChest(oCMobContainer* chest, bool shouldAddToPlaer = false, std::vector<Loot> lootTable = NPC_LOOT_TABLE) {
+        for (size_t i = 0; i < lootTable.size(); ++i)
         {
-            auto loot = CHESTS_LOOT_TABLE[i];
+            auto loot = lootTable[i];
             auto itemName = getDeduplicatedLoot(loot);
 
             if (itemName == "") {
@@ -105,8 +105,13 @@ namespace GOTHIC_ENGINE {
             {
                 oCMobContainer* firstChest = dynamic_cast<oCMobContainer*> (arrMob[i]);
 
-                if (randomizer.Random(0, 1000) >= 1000 - EXTRA_LOOT_CHEST_BASE_CHANCE()) {
+                if (randomizer.Random(0, getRandomLootUpperound(world)) <= EXTRA_LOOT_CHEST_BASE_CHANCE()) {
                     addRandomLootToChest(firstChest, shouldAddToPlaer);
+                    itemsCounter += 1;
+                }
+
+                if (randomizer.Random(0, getRandomLootUpperound(world)) <= 10) {
+                    addRandomLootToChest(firstChest, shouldAddToPlaer, bossLoot);
                     itemsCounter += 1;
                 }
             }
