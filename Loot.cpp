@@ -21,7 +21,7 @@ namespace GOTHIC_ENGINE {
 
         zSTRING pick() {
             if (randomizer.Random(0, chanceUpperbound) <= chanceWeight) {
-                auto element = possibleLootNames[randomizer.Random(0, possibleLootNames.size() - 1)];;
+                auto element = possibleLootNames[randomizer.Random(0, possibleLootNames.size() - 1)];
 
                 if (element != "") {
                     return element;

@@ -66,7 +66,7 @@ namespace GOTHIC_ENGINE {
         return npcsCount;
     }
 
-    int RandomiseRangedWeapons(int extraWeaponsPercent) {
+    int RandomiseRangedWeapons(int extraWeaponsPercent = 0) {
         auto rangedWeaponsList = getRangeWeaponsList();
 
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
@@ -194,6 +194,18 @@ namespace GOTHIC_ENGINE {
         if (inpstr.HasWordI("herbsrandomizer")) {
             return herbsRandomizerHandler(inpstr, msg);
         }
+
+        if (inpstr.HasWordI("punclevutils")) {
+            RandomiseMeleeWeapons();
+            RandomiseRangedWeapons(30);
+            ShuffleChests();
+            AddChestsLoot();
+            ShuffleHerbs();
+            AddRandomLoot();
+
+            msg = "Executed all commands succesfully";
+            return true;
+        }
   
 
         return false;
@@ -218,5 +230,6 @@ namespace GOTHIC_ENGINE {
         zcon->Register("chestsrandomizer SHUFFLE", "Shuffles chests content");
         zcon->Register("chestsrandomizer ADD", "Add chests content");
         zcon->Register("herbsrandomizer SHUFFLE", "Shuffles hrebs positions");
+        zcon->Register("punclevutils all", "Execute all commands at once");
     }
 }

@@ -21,9 +21,14 @@ namespace GOTHIC_ENGINE {
 
 	void Game_Init() {
 		RegisterCommands();
-
+		auto overrideLootTable = zoptions->ReadBool("PUNCLEVUTILS", ("OverrideLootTable"), FALSE);
+		
+		if (overrideLootTable) {
+			NPC_LOOT_TABLE.clear();
+			CHESTS_LOOT_TABLE.clear();
+		}
+		
 		for (auto i = 0;; i += 1) {
-
 			auto hasLootTableToAdd = zoptions->ReadBool("PUNCLEVUTILS", ("Loot" + Z i + "ListActive"), FALSE);
 			
 			if (!hasLootTableToAdd) {
@@ -45,7 +50,8 @@ namespace GOTHIC_ENGINE {
 			}
 
 			if (itemNames.size() > 0) {
-				LOOT_TABLE.push_back(Loot(chance, chanceOutOf, false, itemNames));
+				NPC_LOOT_TABLE.push_back(Loot(chance, chanceOutOf, false, itemNames));
+				CHESTS_LOOT_TABLE.push_back(Loot(chance, chanceOutOf, false, itemNames));
 			}
 		}
 	}

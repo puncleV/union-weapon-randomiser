@@ -66,9 +66,9 @@ namespace GOTHIC_ENGINE {
     }
 
     void addRandomLootToChest(oCMobContainer* chest, bool shouldAddToPlaer = false) {
-        for (size_t i = 0; i < LOOT_TABLE.size(); ++i)
+        for (size_t i = 0; i < CHESTS_LOOT_TABLE.size(); ++i)
         {
-            auto loot = LOOT_TABLE[i];
+            auto loot = CHESTS_LOOT_TABLE[i];
             auto itemName = getDeduplicatedLoot(loot);
 
             if (itemName == "") {
@@ -112,6 +112,8 @@ namespace GOTHIC_ENGINE {
             }
         }
 
+        randomLootGiven.DeleteList();
+        
         return itemsCounter;
     }
 }

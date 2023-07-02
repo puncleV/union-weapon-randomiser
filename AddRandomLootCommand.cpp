@@ -50,35 +50,35 @@ namespace GOTHIC_ENGINE {
 		else {
 			npc->PutInInv(item);
 
-			auto addStrengthMultiplier = (int)(item->value / 200) + 1;
+			auto addStrengthMultiplier = (int)(item->value / VALUE_STRENGTH_PER_LOOT_MULTIPLIER()) + BASE_STRENGTH_PER_LOOT_MULTIPLIER();
 			auto extaHpBasePercent = 150 / npc->attribute[NPC_ATR_HITPOINTSMAX];
 			int additionalHp = randomizer.Random(15 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
 
 			npc->attribute[NPC_ATR_HITPOINTSMAX] += additionalHp;
 			npc->attribute[NPC_ATR_HITPOINTS] += additionalHp;
-			npc->attribute[NPC_ATR_STRENGTH] += 25 * addStrengthMultiplier;
-			npc->attribute[NPC_ATR_DEXTERITY] += 25 * addStrengthMultiplier;
+			npc->attribute[NPC_ATR_STRENGTH] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->attribute[NPC_ATR_DEXTERITY] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
 
-			npc->protection[oEDamageIndex_Blunt] += 5 * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Edge] += 5 * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Fire] += 5 * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Point] += 5 * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Blunt] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Edge] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Fire] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Point] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
 		}
 
 		item->Release();
 	}
 
 	void addRandomLootToNpc(oCNpc* npc, bool addToPlayer = false) {
-		for (size_t i = 0; i < LOOT_TABLE.size(); ++i)
+		for (size_t i = 0; i < NPC_LOOT_TABLE.size(); ++i)
 		{
-			auto loot = LOOT_TABLE[i];
+			auto loot = NPC_LOOT_TABLE[i];
 			addLootToNpc(npc, loot, addToPlayer);
 		}
 	}
 
 
 	int getExtraLootComplementaryProbability(oCNpc* npc) {
-		auto chance = 1000 - EXTRA_LOOT_BASE_CHANCE() - ((int)npc->attribute[NPC_ATR_HITPOINTSMAX] / 400) * 25;
+		auto chance = 1000 - EXTRA_LOOT_BASE_CHANCE() - ((int)npc->attribute[NPC_ATR_HITPOINTSMAX] / EXTRA_LOOT_HP_FACTOR()) * 25;
 
 		return max(chance, 10);
 	}
