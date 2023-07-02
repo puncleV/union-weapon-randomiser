@@ -43,6 +43,7 @@ namespace GOTHIC_ENGINE {
 	// duals - LEFT RIGHT
 	zCArray<int> getMeleeWeaponsList() {
 		zCArray<int> weapons_list;
+
 		auto c_item = parser->GetIndex(oCItem::classDef->scriptClassName);
 		if (c_item == -1) {
 			return 0;
@@ -107,9 +108,8 @@ namespace GOTHIC_ENGINE {
 	}
 
 	oCItem* FindRandomItemThatHasString(zCArray<int> itemsList, zSTRING string) {
-		auto iterator = randomizer.Random(0, itemsList.GetNumInList() - 1);
 
-		for (;iterator < itemsList.GetNumInList();iterator += 1)
+		for (auto iterator = 0;iterator < itemsList.GetNumInList();iterator += 1)
 		{
 			int itemId = itemsList[iterator];
 

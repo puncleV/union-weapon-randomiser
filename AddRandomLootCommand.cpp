@@ -95,7 +95,7 @@ namespace GOTHIC_ENGINE {
 			{
 				oCNpc* npc = list->Get(i);
 
-				if (npc == oCNpc::player)
+				if (npc == oCNpc::player || npc->attribute[NPC_ATR_HITPOINTS] <= 1)
 					continue;
 
 				if (RX_IsMageTrader(npc)) {
