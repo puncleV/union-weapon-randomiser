@@ -3,6 +3,7 @@
 
 // Automatically generated block
 #pragma region Includes
+#include "nlohmann/json.hpp"
 #include "Plugin.h"
 #pragma endregion
 

@@ -137,54 +137,6 @@ namespace GOTHIC_ENGINE {
 		return "right";
 	}
 
-	bool isSingleLootOnly(zSTRING itemName) {
-		return itemName.HasWordI("ITPO_NP_STATS") || itemName.HasWordI("ITAM") || itemName.HasWordI("ITWR")
-			|| itemName.HasWordI("ITRI") || itemName.HasWordI("ITBE") || itemName.HasWordI("ITPO_PERM_DEF")
-			|| itemName.HasWordI("ITPO_FIREDEFENCE") || itemName.HasWordI("ITPO_MAGDEFENCE")
-			|| itemName.HasWordI("ITMI_STEINKOHLE")
-			|| itemName.HasWordI("ITMI_POLLEN")
-			|| itemName.HasWordI("ITAT_ICELESSICE")
-			|| itemName.HasWordI("ITAT_GIANTMANDIBLES")
-			|| itemName.HasWordI("ITMI_MAGICSIGNET")
-			|| itemName.HasWordI("ITUT_SHINYCLAW")
-			|| itemName.HasWordI("ITMI_DEMONICQUARTZ")
-			|| itemName.HasWordI("ITMI_INDESTRUCTIBLESAPPHIRE")
-			|| itemName.HasWordI("ITMI_MARSHESSENCE")
-			|| itemName.HasWordI("ITMI_PARTOFTHEABYSS");
-	}
-
-	bool IsTooCoolLoot(oCItem* item) {
-		return item->GetObjectName().HasWordI("ITMI_POTIONPERMBLANK") || item->GetObjectName().HasWordI("ITPO") || item->GetObjectName().HasWordI("ITMI_TOPAZ") ||
-			item->GetObjectName().HasWordI("ITMI_DIAMOND") || item->GetObjectName().HasWordI("ITMI_RUBY") || item->GetObjectName().HasWordI("ITMI_SAPPHIRE") ||
-			item->GetObjectName().HasWordI("ITMI_EMERALD") || item->GetObjectName().HasWordI("ITPO_HEALTH_02") || item->GetObjectName().HasWordI("ITPO_MANA_02") ||
-			item->GetObjectName().HasWordI("ITPO_HEALTH_03") || item->GetObjectName().HasWordI("ITPO_MANA_03") || item->GetObjectName().HasWordI("ITPL_PERM_HERB") ||
-			item->GetObjectName().HasWordI("ITRI") || item->GetObjectName().HasWordI("ITSC");
-	}
-
-	int getRandomItemAmount(oCItem* item) {
-		auto itemName = item->GetObjectName();
-
-		if (isSingleLootOnly(itemName)) {
-			return 1;
-		}
-
-		if (itemName.HasWordI("ITRW")) {
-			return randomizer.Random(10, 30);
-		}
-
-		auto maxAmount = 10;
-
-		if (IsTooCoolLoot(item)) {
-			maxAmount = 2;
-		}
-		else if (itemName.StartWith("ITFO"))
-		{
-			maxAmount = 4;
-		}
-
-		return randomizer.Random(1, maxAmount);
-	}
-
 	int getRandomLootUpperound(oCWorld* world) {
 		return world->m_strlevelName.HasWordI("NEWWORLD") ? EXTRA_LOOT_HORINIS_FACTOR() : EXTRA_LOOT_OTHER_FACTOR();
 	}
@@ -289,19 +241,13 @@ namespace GOTHIC_ENGINE {
 		})
 	};
 
-	std::vector < zSTRING > defaultLoot = {
-		"ITMI_GOLD", "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITFO_POTTAGE_MUSHROOM_BLACK",
-		"ITFO_POTTAGE_MUSHROOM", "ITFO_COMPOTE_00", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_SCHILDKROETESOUP_SBORKA", "ITFO_WINE_GRITTA",
-		"ITMI_ADDON_JOINT_01", "ITMI_JOINT_02", "ITMI_JOINT_03", "ITFO_SMELLYFISH", "ITFO_ADDON_RUM_SKIP", "ITPO_NP_STAMINA", "ITFOMUTTON_NICLAS",
-		"ITFO_XPSTEW", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_HONEY", "ITFO_HILDASTEW",
-		"ITSC_FIREBOLT", "ITSC_ICEBOLT", "ITSC_LIGHT", "ITSC_ZAP", "ITSC_DEATHBOLT", "ITSC_SUMWOLF", "ITSC_SUMGOBSKEL"
-	};
 
 	auto bossLoot = std::vector<Loot>{ 
 		Loot(875, 1000, false, { "ITPO_RAREPOTION_01", "ITPO_RAREPOTION_02", "ITPO_RAREPOTION_03", "ITPO_RAREPOTION_04", "ITPO_RAREPOTION_05", "ITPO_RAREPOTION_06", "ITPO_RAREPOTION_07", "ITPO_RAREPOTION_08" }),
 		Loot(350, 1000, false, { "ITPO_FIREDEFENCE", "ITPO_MAGDEFENCE", "ITPO_AMUNSU", "ITPO_MAGDEFENCE", "ITPO_INTELLECT", "ITPL_PERM_HERB" }),
 	};
 
-	auto alchemistLoot = Loot(800, 1000, false, { "ITPO_FIREDEFENCE", "ITPO_MAGDEFENCE", "ITPO_AMUNSU", "ITPO_MAGDEFENCE", "ITPO_INTELLECT", "ITPO_NP_STATS", "ITPL_PERM_HERB" });
-	auto magicLoot = Loot(850, 1000, false, { "ITSC_CHARGEFIREBALL", "ITSC_SHRINK", "ITSC_HARMUNDEAD", "ITSC_THUNDERSTORM", "ITSC_WHIRLWIND", "ITSC_ARMYOFDARKNESS", "ITSC_SKULL", "ITSC_TRFDRAGONSNAPPER" });
+	auto alchemistLoot = std::vector<Loot>{ Loot(800, 1000, false, { "ITPO_FIREDEFENCE", "ITPO_MAGDEFENCE", "ITPO_AMUNSU", "ITPO_MAGDEFENCE", "ITPO_INTELLECT", "ITPO_NP_STATS", "ITPL_PERM_HERB" }) };
+	auto magicLoot = std::vector<Loot>{ Loot(850, 1000, false, { "ITSC_CHARGEFIREBALL", "ITSC_SHRINK", "ITSC_HARMUNDEAD", "ITSC_THUNDERSTORM", "ITSC_WHIRLWIND", "ITSC_ARMYOFDARKNESS", "ITSC_SKULL", "ITSC_TRFDRAGONSNAPPER" }) };
+	auto tradersLoot = std::vector<Loot>{};
 }

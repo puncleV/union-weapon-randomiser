@@ -2,33 +2,135 @@
 // Union SOURCE file
 
 #include <array>
+#include <set>
 namespace GOTHIC_ENGINE {
 
-    class Loot {
-    private:
-        std::vector <zSTRING> possibleLootNames;
-        int chanceWeight;
-        int chanceUpperbound;
-    public:
-        bool shouldDeduplicate;
+	class Loot {
+	private:
+		std::vector <zSTRING> possibleLootNames;
+		std::set <zSTRING> npcIgnoreList;
+		int probability;
+		int probabilityOutOf;
+		bool shouldDeduplicate;
+		int minAmount;
+		int maxAmount;
 
-        Loot(int _chanceWeight, int _chanceUpperbound, bool _shouldDeduplicate, std::vector <zSTRING> _possibleLootNames) {
-            possibleLootNames = _possibleLootNames;
-            chanceWeight = _chanceWeight;
-            chanceUpperbound = _chanceUpperbound;
-            shouldDeduplicate = _shouldDeduplicate;
-        };
+		int getRandomItemAmount(oCItem* item) {
+			auto itemName = item->GetObjectName();
 
-        zSTRING pick() {
-            if (randomizer.Random(0, chanceUpperbound) <= chanceWeight) {
-                auto element = possibleLootNames[randomizer.Random(0, possibleLootNames.size() - 1)];
+			if (minAmount == maxAmount) {
+				return minAmount;
+			}
 
-                if (element != "") {
-                    return element;
-                }
-            }
+			return randomizer.Random(minAmount, maxAmount);
+		}
 
-            return "";
-        };
-    };
+		oCItem* getItemWithAmount(zSTRING name) {
+			oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, name));
+
+			if (!item) {
+				return nullptr;
+			}
+
+			if (item->HasFlag(ITM_FLAG_MULTI)) {
+				item->amount = getRandomItemAmount(item);
+			}
+
+			return item;
+		}
+	public:
+		Loot(int _chanceWeight, int _chanceUpperbound, bool _shouldDeduplicate, std::vector <zSTRING> _possibleLootNames, int _minAmount = 1, int _maxAmount = 1) {
+			possibleLootNames = _possibleLootNames;
+			probability = _chanceWeight;
+			probabilityOutOf = _chanceUpperbound;
+			shouldDeduplicate = _shouldDeduplicate;
+			minAmount = _minAmount;
+			maxAmount = _maxAmount;
+		};
+
+		bool tryAddToNpc(oCNpc* npc, std::set <zSTRING>& alreadyGivenItemNames, bool shouldAddToPlayer = false) {
+			if (!npc) {
+				return FALSE;
+			}
+
+			if (randomizer.Random(0, probabilityOutOf) <= probability) {
+				auto itemName = randomizer.getRandomArrayElement(possibleLootNames);
+				auto found = alreadyGivenItemNames.find(itemName);
+				
+				alreadyGivenItemNames.insert(itemName);
+
+				if (found != alreadyGivenItemNames.end() && shouldDeduplicate) {
+					itemName = randomizer.getRandomArrayElement(defaultLoot);
+				}
+
+				auto item = getItemWithAmount(itemName);
+
+				if (shouldAddToPlayer) {
+					player->PutInInv(item);
+				}
+				else {
+					npc->PutInInv(item);
+					strengthenNpc(npc, item->value * item->amount);
+				}
+
+				item->Release();
+
+				return TRUE;
+			}
+
+			return FALSE;
+		};
+
+		void strengthenNpc(oCNpc* npc, int itemValue = 1) {
+			if (npc == player) {
+				return;
+			}
+
+			auto addStrengthMultiplier = (int)(itemValue / VALUE_STRENGTH_PER_LOOT_MULTIPLIER()) + BASE_STRENGTH_PER_LOOT_MULTIPLIER();
+			auto extaHpBasePercent = ENEMY_HP_FACTOR() / npc->attribute[NPC_ATR_HITPOINTSMAX];
+			int additionalHp = randomizer.Random(50 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
+
+			npc->attribute[NPC_ATR_HITPOINTSMAX] += additionalHp;
+			npc->attribute[NPC_ATR_HITPOINTS] += additionalHp;
+			npc->attribute[NPC_ATR_STRENGTH] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->attribute[NPC_ATR_DEXTERITY] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
+
+			npc->protection[oEDamageIndex_Blunt] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Edge] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Fire] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+			npc->protection[oEDamageIndex_Point] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
+		}
+
+		bool tryAddToChest(oCMobContainer* chest, std::set <zSTRING>& alreadyGivenItemNames, bool shouldAddToPlayer = false) {
+			if (!chest) {
+				return FALSE;
+			}
+
+			if (randomizer.Random(0, probabilityOutOf) <= probability) {
+				auto itemName = randomizer.getRandomArrayElement(possibleLootNames);
+				auto found = alreadyGivenItemNames.find(itemName);
+
+				alreadyGivenItemNames.insert(itemName);
+
+				if (found != alreadyGivenItemNames.end() && shouldDeduplicate) {
+					itemName = randomizer.getRandomArrayElement(defaultLoot);
+				}
+
+				auto item = getItemWithAmount(itemName);
+
+				if (shouldAddToPlayer) {
+					player->PutInInv(item);
+				}
+				else {
+					chest->Insert(item);
+				}
+
+				item->Release();
+
+				return TRUE;
+			}
+
+			return FALSE;
+		};
+	};
 }

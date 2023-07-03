@@ -69,26 +69,7 @@ namespace GOTHIC_ENGINE {
         for (size_t i = 0; i < lootTable.size(); ++i)
         {
             auto loot = lootTable[i];
-            auto itemName = getDeduplicatedLoot(loot);
-
-            if (itemName == "") {
-                continue;
-            }
-
-            oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, itemName));
-
-            if (item->HasFlag(ITM_FLAG_MULTI)) {
-                item->amount = getRandomItemAmount(item);
-            }
-
-            if (shouldAddToPlaer) {
-                player->PutInInv(item);
-            }
-            else {
-                chest->Insert(item);
-            }
-
-            item->Release();
+            loot.tryAddToChest(chest, randomLootGiven, shouldAddToPlaer);
         }
     }
 
@@ -117,7 +98,7 @@ namespace GOTHIC_ENGINE {
             }
         }
 
-        randomLootGiven.DeleteList();
+        randomLootGiven.clear();
         
         return itemsCounter;
     }

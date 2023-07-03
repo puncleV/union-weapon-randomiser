@@ -1,78 +1,19 @@
 #include <array>
+#include <set>
 namespace GOTHIC_ENGINE {
-	zCArray<zSTRING> randomLootGiven;
-
-	zSTRING getDeduplicatedLoot(Loot loot) {
-		auto lootName = loot.pick();
-
-		if (lootName == "") {
-			return "";
-		}
-
-		if (!loot.shouldDeduplicate || randomLootGiven.Search(lootName) == Invalid) {
-			randomLootGiven.Insert(lootName);
-
-			return lootName;
-		}
-
-		for (size_t i = 0; i < 3; ++i) {
-			auto name = loot.pick();
-
-			if (name == "") {
-				continue;
-			}
-
-			if (randomLootGiven.Search(name) == Invalid || randomizer.Random(0, 1000) >= 800) {
-				randomLootGiven.Insert(name);
-				return name;
-			}
-		}
-
-		return randomizer.getRandomArrayElement(defaultLoot);
-	}
-
-	void addLootToNpc(oCNpc* npc, Loot loot, bool addToPlayer = false) {
-		auto itemName = getDeduplicatedLoot(loot);
-
-		if (itemName == "") {
-			return;
-		}
-
-		oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob_novt(zVOB_TYPE_ITEM, itemName));
-
-		if (item->HasFlag(ITM_FLAG_MULTI)) {
-			item->amount = getRandomItemAmount(item);
-		}
-
-		if (addToPlayer) {
-			player->PutInInv(item);
-		}
-		else {
-			npc->PutInInv(item);
-
-			auto addStrengthMultiplier = (int)(item->value / VALUE_STRENGTH_PER_LOOT_MULTIPLIER()) + BASE_STRENGTH_PER_LOOT_MULTIPLIER();
-			auto extaHpBasePercent = ENEMY_HP_FACTOR() / npc->attribute[NPC_ATR_HITPOINTSMAX];
-			int additionalHp = randomizer.Random(50 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
-
-			npc->attribute[NPC_ATR_HITPOINTSMAX] += additionalHp;
-			npc->attribute[NPC_ATR_HITPOINTS] += additionalHp;
-			npc->attribute[NPC_ATR_STRENGTH] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
-			npc->attribute[NPC_ATR_DEXTERITY] += ENEMY_STATS_PER_MULTIPLIER() * addStrengthMultiplier;
-
-			npc->protection[oEDamageIndex_Blunt] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Edge] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Fire] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
-			npc->protection[oEDamageIndex_Point] += ENEMY_DEFENCE_PER_MULTIPLIER() * addStrengthMultiplier;
-		}
-
-		item->Release();
-	}
+	std::set<zSTRING> randomLootGiven;
 
 	void addRandomLootToNpc(oCNpc* npc, bool addToPlayer = false, std::vector<Loot> lootTable = NPC_LOOT_TABLE) {
 		for (size_t i = 0; i < lootTable.size(); ++i)
 		{
 			auto loot = lootTable[i];
-			addLootToNpc(npc, loot, addToPlayer);
+
+			if (addToPlayer) {
+				loot.tryAddToNpc(player, randomLootGiven);
+			}
+			else {
+				loot.tryAddToNpc(npc, randomLootGiven);
+			}
 		}
 	}
 
@@ -102,20 +43,19 @@ namespace GOTHIC_ENGINE {
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
 
-					addLootToNpc(npc, magicLoot, addToPlayer);
+					addRandomLootToNpc(npc, addToPlayer, magicLoot);
 				}
 				else if (RX_IsAlchemistTrader(npc)) {
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
-
-					addLootToNpc(npc, alchemistLoot, addToPlayer);
+					addRandomLootToNpc(npc, addToPlayer, alchemistLoot);
 				}
 				else if (RX_IsTrader(npc)) {
 					npcsCount += 1;
 
 					addRandomLootToNpc(npc, addToPlayer);
 					addRandomLootToNpc(npc, addToPlayer);
-					addRandomLootToNpc(npc, addToPlayer);
+					addRandomLootToNpc(npc, addToPlayer, tradersLoot);
 				}
 				else if (RX_IsBoss(npc)) {
 					npcsCount += 1;
@@ -133,7 +73,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			randomLootGiven.DeleteList();
+			randomLootGiven.clear();
 		}
 
 		return npcsCount;
