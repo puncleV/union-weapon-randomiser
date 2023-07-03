@@ -9,6 +9,14 @@ namespace GOTHIC_ENGINE {
 	void Game_Entry() {
 	}
 
+	void fillLootTables(){
+		bossLoot = jsonConfig.lootTable("boss-loot");
+		alchemistLoot = jsonConfig.lootTable("alchemist-loot");
+		magicLoot = jsonConfig.lootTable("magic-loot");
+		tradersLoot = jsonConfig.lootTable("traders-loot");
+		NPC_LOOT_TABLE = jsonConfig.lootTable("base-table");
+	}
+
 	string GetEngineVersionName(TEngineVersion version) {
 		switch (version) {
 		case Engine_G1:  return "Gothic I Classic";
@@ -21,22 +29,26 @@ namespace GOTHIC_ENGINE {
 
 	void Game_Init() {
 		RegisterCommands();
+		updateConstantsWithOptions();
+		jsonConfig.loadConfig();
+		fillLootTables();
+
 		auto overrideLootTable = zoptions->ReadBool("PUNCLEVUTILS", ("OverrideLootTable"), FALSE);
-		
+
 		if (overrideLootTable) {
 			NPC_LOOT_TABLE.clear();
 		}
-		
+
 		for (auto i = 0;; i += 1) {
 			auto hasLootTableToAdd = zoptions->ReadBool("PUNCLEVUTILS", ("Loot" + Z i + "ListActive"), FALSE);
-			
+
 			if (!hasLootTableToAdd) {
 				break;
 			}
 
 			auto chance = zoptions->ReadInt("PUNCLEVUTILS", ("Loot" + Z i + "Chance"), 0);
 			auto chanceOutOf = zoptions->ReadInt("PUNCLEVUTILS", ("Loot" + Z i + "ChanceOutOf"), 1000);
-			
+
 			std::vector<zSTRING> itemNames;
 
 			for (auto j = 0;; j += 1) {
@@ -60,6 +72,15 @@ namespace GOTHIC_ENGINE {
 	}
 
 	void Game_Loop() {
+		player->getNpcInRadius(3500);
+
+		if (IS_DEBUG) {
+			auto focusNpc = player->GetFocusNpc();
+
+			if (focusNpc) {
+				screen->PrintCY(10, " L: " + Z focusNpc->getNpcVar(ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX) + "W: " + Z focusNpc->getNpcVar(WEAPON_RANDOMIZED_NPC_VAR_IDX) + " RW:" + Z focusNpc->getNpcVar(RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX));
+			}
+		}
 	}
 
 	void Game_PostLoop() {

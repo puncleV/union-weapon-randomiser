@@ -29,6 +29,20 @@ namespace GOTHIC_ENGINE {
 		"VLK_484_LEHMAR",
 	};
 
+	void addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
+		for (size_t i = 0; i < lootTable.size(); ++i)
+		{
+			auto loot = lootTable[i];
+
+			if (SHOULD_ADD_LOOT_TO_PLAYER) {
+				loot.tryAddToNpc(player, randomLootGiven);
+			}
+			else {
+				loot.tryAddToNpc(npc, randomLootGiven);
+			}
+		}
+	}
+
 	bool npcCanWearWeapon(oCItem* item, oCNpc* npc) {
 		for (size_t i = 0; i < ITM_COND_MAX; i++)
 		{
@@ -84,6 +98,4 @@ namespace GOTHIC_ENGINE {
 
 		return RX_IsMageTrader(npc) || RX_IsAlchemistTrader(npc);
 	}
-
-	
 }

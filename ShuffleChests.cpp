@@ -86,7 +86,7 @@ namespace GOTHIC_ENGINE {
             {
                 oCMobContainer* firstChest = dynamic_cast<oCMobContainer*> (arrMob[i]);
 
-                if (randomizer.Random(0, getRandomLootUpperound(world)) <= EXTRA_LOOT_CHEST_BASE_CHANCE()) {
+                if (randomizer.Random(0, getRandomLootUpperound(world)) <= EXTRA_LOOT_CHEST_BASE_CHANCE) {
                     addRandomLootToChest(firstChest, shouldAddToPlaer);
                     itemsCounter += 1;
                 }

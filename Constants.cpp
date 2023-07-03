@@ -1,57 +1,31 @@
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
+#include<set>
 namespace GOTHIC_ENGINE {
 	auto const AIV_BOSS = 90;
+	auto EXTRA_LOOT_BASE_CHANCE = 15;
+	auto EXTRA_LOOT_HP_FACTOR_HORINIS = 400;
+	auto EXTRA_LOOT_HP_FACTOR_OTHER = 700;
+	auto EXTRA_LOOT_HP_FACTOR_MULTIPLIER = 25;
+	auto EXTRA_LOOT_HORINIS_FACTOR = 1000;
+	auto EXTRA_LOOT_OTHER_FACTOR = 1250;
+	auto EXTRA_LOOT_CHEST_BASE_CHANCE = 450;
+	auto BASE_STRENGTH_PER_LOOT_MULTIPLIER = 1;
+	auto VALUE_STRENGTH_PER_LOOT_MULTIPLIER = 250;
+	auto ENEMY_STATS_PER_MULTIPLIER = 25;
+	auto ENEMY_DEFENCE_PER_MULTIPLIER = 3;
+	auto ENEMY_HP_FACTOR = 150;
+	auto CHANCE_TO_ADD_RANGED_WEAPON = 300;
 
-	auto const EXTRA_LOOT_BASE_CHANCE() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootChance", 15);
-	}
+	auto SHOULD_ADD_LOOT_TO_PLAYER = FALSE;
+	auto SHOULD_IGNORE_CHECK_TO_ADD_LOOT = FALSE;
+	auto SHOULD_ADD_LOOT_TO_NPC = FALSE;
+	auto SHOULD_SHUFFLE_MELEE_WEAPON = FALSE;
+	auto SHOULD_SHUFFLE_RANGED_WEAPON = FALSE;
+	auto IS_DEBUG = FALSE;
 
-	auto const EXTRA_LOOT_HP_FACTOR_HORINIS() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorHorinis", 400);
-	}
-
-	auto const EXTRA_LOOT_HP_FACTOR_OTHER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorOther", 700);
-	}
-
-	auto const EXTRA_LOOT_HP_FACTOR_MULTIPLIER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHpFactorMultiplier", 25);
-	}
-
-	auto const EXTRA_LOOT_HORINIS_FACTOR() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootHorinisFactor", 1000);
-	}
-
-	auto const EXTRA_LOOT_OTHER_FACTOR() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ExtraLootOtherFactor", 1250);
-	}
-
-	auto const EXTRA_LOOT_CHEST_BASE_CHANCE() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ChestsExtraLootChance", 450);
-	}
-
-	auto const BASE_STRENGTH_PER_LOOT_MULTIPLIER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "BaseStrengthMultiplierForAddedLoot", 1);
-	}
-
-	auto const VALUE_STRENGTH_PER_LOOT_MULTIPLIER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "ValueBasedStrengthMultiplier", 250);
-	}
-
-	auto const ENEMY_STATS_PER_MULTIPLIER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "StrengthenEnemyStatsPerMultiplier", 25);
-	}
-
-	auto const ENEMY_DEFENCE_PER_MULTIPLIER() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "StrengthenEnemyDefencePerMultiplier", 3);
-	}
-
-	auto const ENEMY_HP_FACTOR() {
-		return zoptions->ReadInt("PUNCLEVUTILS", "StrengthenEnemyBaseHP", 150);
-	}
-
+	std::set<zSTRING> randomLootGiven;
 
 	std::vector < zSTRING > defaultLoot = {
 		"ITMI_GOLD", "ITMI_GOLD", "ITRW_EXPLOSIVEBOLT", "ITRW_ADDON_MAGICARROW", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITPO_NP_MANAREG2", "ITFO_POTTAGE_MUSHROOM_BLACK", "ITFO_POTTAGE_MUSHROOM_BLACK",
@@ -60,4 +34,14 @@ namespace GOTHIC_ENGINE {
 		"ITFO_XPSTEW", "ITFO_CAKE_APPLE", "ITFO_CAKE_MEAT", "ITFO_CAKE_MUSHROOM", "ITFO_CAKE_FISH", "ITFO_CAKE_HONEY", "ITFO_HILDASTEW",
 		"ITSC_FIREBOLT", "ITSC_ICEBOLT", "ITSC_LIGHT", "ITSC_ZAP", "ITSC_DEATHBOLT", "ITSC_SUMWOLF", "ITSC_SUMGOBSKEL"
 	};
+
+	zCArray<int> meleeWeaponsList;
+	zCArray<int> rangedWeaponsList;
+
+	int getExtraLootProbability(oCNpc* npc, oCWorld* world) {
+		auto hpFactor = world->GetObjectName().HasWordI("NEWWORLD") ? EXTRA_LOOT_HP_FACTOR_HORINIS : EXTRA_LOOT_HP_FACTOR_OTHER;
+		auto chance = EXTRA_LOOT_BASE_CHANCE + ((int)npc->attribute[NPC_ATR_HITPOINTSMAX] / hpFactor) * EXTRA_LOOT_HP_FACTOR_MULTIPLIER;
+
+		return max(chance, 10);
+	}
 }

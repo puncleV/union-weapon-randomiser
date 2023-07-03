@@ -878,6 +878,10 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ConstantsInitializer.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="JsonConfig.cpp">
       <SubType>
       </SubType>
@@ -891,6 +895,10 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
       </SubType>
     </ClInclude>
     <ClInclude Include="NpcHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="NpcExtend.cpp">
       <SubType>
       </SubType>
     </ClInclude>
