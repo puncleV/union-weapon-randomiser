@@ -10,7 +10,6 @@ namespace GOTHIC_ENGINE {
 		std::set <zSTRING> npcIgnoreList;
 		int probability;
 		int probabilityOutOf;
-		bool shouldDeduplicate;
 		int minAmount;
 		int maxAmount;
 
@@ -40,33 +39,24 @@ namespace GOTHIC_ENGINE {
 	public:
 		std::vector <zSTRING> possibleLootNames;
 
-		Loot(int _chanceWeight, int _chanceUpperbound, bool _shouldDeduplicate, std::vector <zSTRING> _possibleLootNames, int _minAmount = 1, int _maxAmount = 1) {
+		Loot(int _chanceWeight, int _chanceUpperbound, std::vector <zSTRING> _possibleLootNames, int _minAmount = 1, int _maxAmount = 1) {
 			possibleLootNames = _possibleLootNames;
 			probability = _chanceWeight;
 			probabilityOutOf = _chanceUpperbound;
-			shouldDeduplicate = _shouldDeduplicate;
 			minAmount = _minAmount;
 			maxAmount = _maxAmount;
 		};
 
-		bool tryAddToNpc(oCNpc* npc, std::set <zSTRING>& alreadyGivenItemNames, bool shouldAddToPlayer = false) {
+		bool tryAddToNpc(oCNpc* npc) {
 			if (!npc) {
 				return FALSE;
 			}
 
 			if (randomizer.Random(0, probabilityOutOf) <= probability) {
 				auto itemName = randomizer.getRandomArrayElement(possibleLootNames);
-				auto found = alreadyGivenItemNames.find(itemName);
-				
-				alreadyGivenItemNames.insert(itemName);
-
-				if (found != alreadyGivenItemNames.end() && shouldDeduplicate && randomizer.Random(0, 1000) <= 900) {
-					itemName = randomizer.getRandomArrayElement(defaultLoot);
-				}
-
 				auto item = getItemWithAmount(itemName);
 
-				if (shouldAddToPlayer) {
+				if (SHOULD_ADD_LOOT_TO_PLAYER) {
 					player->PutInInv(item);
 				}
 				else {
@@ -117,24 +107,17 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		bool tryAddToChest(oCMobContainer* chest, std::set <zSTRING>& alreadyGivenItemNames, bool shouldAddToPlayer = false) {
+		bool tryAddToChest(oCMobContainer* chest) {
 			if (!chest) {
 				return FALSE;
 			}
 
 			if (randomizer.Random(0, probabilityOutOf) <= probability) {
 				auto itemName = randomizer.getRandomArrayElement(possibleLootNames);
-				auto found = alreadyGivenItemNames.find(itemName);
-
-				alreadyGivenItemNames.insert(itemName);
-
-				if (found != alreadyGivenItemNames.end() && shouldDeduplicate) {
-					itemName = randomizer.getRandomArrayElement(defaultLoot);
-				}
 
 				auto item = getItemWithAmount(itemName);
 
-				if (shouldAddToPlayer) {
+				if (SHOULD_ADD_LOOT_TO_PLAYER) {
 					player->PutInInv(item);
 				}
 				else {

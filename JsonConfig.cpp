@@ -7,7 +7,6 @@ namespace GOTHIC_ENGINE {
 	class JsonConfig {
 	private:
 		nlohmann::json jsonFile;
-		const string configFileName = "punclev-utils.json";
 
 		std::string utf8_to_ansi(const std::string& str, const std::locale& loc = std::locale("." + std::to_string(ANSI_CODEPAGE_DEFAULT))) {
 			using wcvt = std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>;
@@ -19,7 +18,7 @@ namespace GOTHIC_ENGINE {
 	public:
 		void loadConfig() {
 			zoptions->ChangeDir(DIR_SYSTEM);
-			zFILE_VDFS* originFile = new zFILE_VDFS(configFileName);
+			zFILE_VDFS* originFile = new zFILE_VDFS(JSON_FILE_NAME);
 
 			if (!originFile->Exists()) {
 				delete originFile;
@@ -52,7 +51,6 @@ namespace GOTHIC_ENGINE {
 			for (auto i = 0; i < jsonFile["loot-tables"][name].size(); i += 1) {
 				int chance = jsonFile["loot-tables"][name][i]["chance"];
 				int chanceOutOf = jsonFile["loot-tables"][name][i].value("chanceOutOf", 1000);
-				bool deduplicate = jsonFile["loot-tables"][name][i].value("deduplicate", FALSE);
 				std::vector <zSTRING> lootNames;
 
 				for (auto j = 0; j < jsonFile["loot-tables"][name][i]["itemNames"].size(); j += 1) {
@@ -62,7 +60,7 @@ namespace GOTHIC_ENGINE {
 				int minAmount = jsonFile["loot-tables"][name][i].value("minAmount", 1); 
 				int maxAmount = jsonFile["loot-tables"][name][i].value("maxAmount", 1);
 
-				_lootTable.push_back(Loot(chance, chanceOutOf, deduplicate, lootNames));
+				_lootTable.push_back(Loot(chance, chanceOutOf, lootNames, minAmount, maxAmount));
 			}
 
 			return _lootTable;

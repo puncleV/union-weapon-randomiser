@@ -5,6 +5,7 @@ namespace GOTHIC_ENGINE {
 	auto const ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX = 390;
 	auto const WEAPON_RANDOMIZED_NPC_VAR_IDX = 391;
 	auto const RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX = 392;
+	auto const PLAYER_CHESTS_CONTENT_CHANGED_VAR_IDX = 390;
 
 	void addLootToNPC(oCNpc* npc) { 
 		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
@@ -34,6 +35,9 @@ namespace GOTHIC_ENGINE {
 			addRandomLootToNpc(npc);
 
 			addRandomLootToNpc(npc, bossLoot);
+		}
+		else if (npc->IsHuman()) {
+			addRandomLootToNpc(npc, humanLoot);
 		}
 		else if (randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 			addRandomLootToNpc(npc);
@@ -176,5 +180,28 @@ namespace GOTHIC_ENGINE {
 		}
 
 		return npcList;
+	}
+
+	void oCNpc::randomizeChestsInRadius(float radius) {
+		ClearVobList();
+		CreateVobList(radius);
+
+		zCArray<zCVob*> vobList = this->vobList;
+		zCArray<oCMobContainer*> chestsList;
+		zCVob* pVob = NULL;
+		oCMobContainer* chest = NULL;
+
+		for (int i = 0; i < vobList.GetNum(); i++) {
+			pVob = vobList.GetSafe(i);
+			if (!pVob)
+				continue;
+			chest = zDYNAMIC_CAST<oCMobContainer>(pVob);
+			if (!chest)
+				continue;
+			if (chest->isRandomized())
+				continue;
+
+			chest->randomize();
+		}
 	}
 }

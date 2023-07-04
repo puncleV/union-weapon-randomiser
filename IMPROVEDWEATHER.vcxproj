@@ -882,6 +882,10 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ContainerExtend.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="JsonConfig.cpp">
       <SubType>
       </SubType>

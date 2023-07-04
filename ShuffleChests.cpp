@@ -2,7 +2,7 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
-    int ShuffleChests() {
+    int shuffleChests() {
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
         auto itemsCounter = 0;
 
@@ -65,15 +65,7 @@ namespace GOTHIC_ENGINE {
         return itemsCounter;
     }
 
-    void addRandomLootToChest(oCMobContainer* chest, bool shouldAddToPlaer = false, std::vector<Loot> lootTable = NPC_LOOT_TABLE) {
-        for (size_t i = 0; i < lootTable.size(); ++i)
-        {
-            auto loot = lootTable[i];
-            loot.tryAddToChest(chest, randomLootGiven, shouldAddToPlaer);
-        }
-    }
-
-    int AddChestsLoot(bool shouldAddToPlaer = false) {
+    int addChestsLoot() {
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
         auto itemsCounter = 0;
 
@@ -87,19 +79,17 @@ namespace GOTHIC_ENGINE {
                 oCMobContainer* firstChest = dynamic_cast<oCMobContainer*> (arrMob[i]);
 
                 if (randomizer.Random(0, getRandomLootUpperound(world)) <= EXTRA_LOOT_CHEST_BASE_CHANCE) {
-                    addRandomLootToChest(firstChest, shouldAddToPlaer);
+                    addRandomLootToChest(firstChest);
                     itemsCounter += 1;
                 }
 
                 if (randomizer.Random(0, getRandomLootUpperound(world)) <= 10) {
-                    addRandomLootToChest(firstChest, shouldAddToPlaer, bossLoot);
+                    addRandomLootToChest(firstChest, bossLoot);
                     itemsCounter += 1;
                 }
             }
         }
 
-        randomLootGiven.clear();
-        
         return itemsCounter;
     }
 }

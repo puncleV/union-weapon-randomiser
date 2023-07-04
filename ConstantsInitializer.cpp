@@ -21,5 +21,8 @@ namespace GOTHIC_ENGINE {
 		IS_DEBUG = zoptions->ReadBool("PUNCLEVUTILS", "Debug", FALSE);
 		SHOULD_SHUFFLE_MELEE_WEAPON = zoptions->ReadBool("PUNCLEVUTILS", "ShouldRandomizeMeleeWeapons", FALSE);
 		SHOULD_SHUFFLE_RANGED_WEAPON = zoptions->ReadBool("PUNCLEVUTILS", "ShouldRandomizeRangedWeapons", FALSE);
+		SHOULD_SHUFFLE_CHESTS = zoptions->ReadBool("PUNCLEVUTILS", "ShouldShuffleChests", FALSE);
+		SHOULD_ADD_LOOT_TO_CHESTS = zoptions->ReadBool("PUNCLEVUTILS", "ShouldAddLootToChests", FALSE);
+		JSON_FILE_NAME = zoptions->ReadString("PUNCLEVUTILS", "JsonFileName", "punclev-utils.json");
 	}
 }

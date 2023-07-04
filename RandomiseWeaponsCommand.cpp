@@ -80,6 +80,8 @@ namespace GOTHIC_ENGINE {
 
 		if (inpstr.HasWordI("TOGGLE_PLAYER")) {
 			SHOULD_ADD_LOOT_TO_PLAYER = SHOULD_ADD_LOOT_TO_PLAYER ? 0 : 1;
+
+			msg = "Should add to player value: " + Z SHOULD_ADD_LOOT_TO_PLAYER;
 			return true;
 		}
 
@@ -95,14 +97,14 @@ namespace GOTHIC_ENGINE {
 
 	bool chestsRandomizerHandler(const zSTRING& inpstr, zSTRING& msg) {
 		if (inpstr.HasWordI("SHUFFLE")) {
-			auto result = ShuffleChests();
+			auto result = shuffleChests();
 			msg = "Shuffled container for: " + Z result + " items.";
 
 			return true;
 		}
 
 		if (inpstr.HasWordI("ADD")) {
-			auto result = AddChestsLoot(inpstr.HasWordI("ADD_TO_PLAYER"));
+			auto result = addChestsLoot();
 
 			msg = "Added: " + Z result + " items.";
 
@@ -147,8 +149,8 @@ namespace GOTHIC_ENGINE {
 			else {
 				RandomiseMeleeWeapons();
 				RandomiseRangedWeapons(30);
-				ShuffleChests();
-				AddChestsLoot();
+				shuffleChests();
+				addChestsLoot();
 				ShuffleHerbs();
 				AddRandomLoot();
 				msg = "Executed all commands succesfully";

@@ -10,3 +10,4 @@ void setNpcVar(int, int);
 
 int getNpcVar(int);
 zCArray<oCNpc*> getNpcInRadius(float);
+void randomizeChestsInRadius(float);

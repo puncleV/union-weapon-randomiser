@@ -9,6 +9,7 @@
 #include "ItemHelpers.cpp"
 #include "NpcHelper.cpp"
 #include "NpcExtend.cpp"
+#include "ContainerExtend.cpp"
 #include "ShuffleHerbs.cpp"
 #include "AddRandomLootCommand.cpp"
 #include "ShuffleChests.cpp"

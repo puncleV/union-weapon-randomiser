@@ -49,8 +49,6 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 			}
-
-			randomLootGiven.clear();
 		}
 
 		return npcsCount;

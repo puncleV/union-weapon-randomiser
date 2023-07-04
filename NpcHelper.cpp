@@ -32,14 +32,7 @@ namespace GOTHIC_ENGINE {
 	void addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
 		for (size_t i = 0; i < lootTable.size(); ++i)
 		{
-			auto loot = lootTable[i];
-
-			if (SHOULD_ADD_LOOT_TO_PLAYER) {
-				loot.tryAddToNpc(player, randomLootGiven);
-			}
-			else {
-				loot.tryAddToNpc(npc, randomLootGiven);
-			}
+			lootTable[i].tryAddToNpc(npc);
 		}
 	}
 

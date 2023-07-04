@@ -17,7 +17,7 @@ namespace GOTHIC_ENGINE {
 			item->GetObjectName().HasWordI("ADANOSMOLOT") || item->GetObjectName().HasWordI("ASSBLADE") || item->GetObjectName().HasWordI("HOLY_HAMMER") || item->GetObjectName().HasWordI("ALRIKSSWORD") ||
 			item->GetObjectName().HasWordI("ITMW_2H_ROD") || item->GetObjectName().HasWordI("DS_MONWEAPON_HALLOWEEN") || item->GetObjectName().HasWordI("GREATARBALET") || item->GetObjectName().HasWordI("MAGICCOSSBOW") ||
 			item->GetObjectName().HasWordI("FAKESWORD") || item->GetObjectName().HasWordI("PAL_CLOACK") || item->GetObjectName().HasWordI("SENYAK") || item->GetObjectName().HasWordI("HALLEBERDE_CLAW") || item->GetObjectName().HasWordI("ITMW_STAFF_CLAW") ||
-			item->GetObjectName().HasWordI("ITMW_1H_THIEF_01_RIGHT") || item->GetObjectName().StartWith("ITKE_") || item->GetObjectName().StartWith("LUTERO");
+			item->GetObjectName().HasWordI("ITMW_1H_THIEF_01_RIGHT") || item->GetObjectName().StartWith("ITKE_") || item->GetObjectName().StartWith("LUTERO") || item->GetObjectName().StartWith("SNC_SPEC");
 	}
 
 	bool IsItemSymbol(zCPar_Symbol* symbol) {
@@ -146,4 +146,5 @@ namespace GOTHIC_ENGINE {
 	std::vector<Loot> alchemistLoot;
 	std::vector<Loot> magicLoot;
 	std::vector<Loot> tradersLoot;
+	std::vector<Loot> humanLoot;
 }

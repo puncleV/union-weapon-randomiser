@@ -23,7 +23,7 @@ namespace GOTHIC_ENGINE {
             return distrib(gen);
         }
 
-        zSTRING getRandomArrayElement(std::vector<zSTRING> elements) {
+        template<class T> T getRandomArrayElement(std::vector<T> elements) {
             return elements[Random(0, elements.size() - 1)];
         }
     };
