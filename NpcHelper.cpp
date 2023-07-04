@@ -2,8 +2,19 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
-	std::vector<zSTRING> alchemistsList = { "NONE_1192_FREGEAL", "VLK_498_IGNAZ", "BAU_980_SAGITTA", "VLK_409_ZURIS", "VLK_417_CONSTANTINO", "KDF_506_NEORAS", "NONE_100_XARDAS", "VLK_422_SALANDRIL" };
-	std::vector<zSTRING> magicTraderList = { "VLK_6027_TALIASAN", "GUR_8003_TYON", "KDW_1401_ADDON_CRONOS_NW", "KDF_509_ISGAROTH", "KDF_508_GORAX", "KDF_506_NEORAS", "NONE_100_XARDAS" };
+	std::vector<zSTRING> alchemistsList = { "NONE_1192_FREGEAL", "VLK_498_IGNAZ", "BAU_980_SAGITTA", "VLK_409_ZURIS", "VLK_417_CONSTANTINO", "KDF_506_NEORAS", "NONE_100_XARDAS", "VLK_422_SALANDRIL", "WC_DRUID_TEACHER", "XBS_7501_CAMPER", "VLK_411_GAERTNER" };
+	std::vector<zSTRING> magicTraderList = { 
+		"VLK_6027_TALIASAN",
+		"GUR_8003_TYON",
+		"KDW_1401_ADDON_CRONOS_NW",
+		"KDF_509_ISGAROTH",
+		"KDF_508_GORAX",
+		"KDF_506_NEORAS",
+		"NONE_100_XARDAS", 
+		"KDW_14010_ADDON_CRONOS_ADW",
+		"WC_DRUID_TEACHER",
+		"DMT_DARKTEACHER ",
+	};
 	std::vector<zSTRING> miscTradersList = {
 		"VLK_458_RUPERT",
 		"BDT_1091_ADDON_LUCIA",
@@ -27,6 +38,44 @@ namespace GOTHIC_ENGINE {
 		"VLK_468_CANTHAR",
 		"VLK_469_HALVOR",
 		"VLK_484_LEHMAR",
+		"VLK_4303_ADDON_EROL",
+		"VLK_404_LUTERO",
+		"VLK_6134_VALERAN",
+		"VLK_6110_NIGEL",
+		"SLD_823_KHALED",
+		"VLK_462_THORBEN",
+		"VLK_437_BRAHIM",
+		"VLK_470_SARAH",
+		"VLK_424_ALWIN",
+		"VLK_492_RENGARU",
+		"NOV_11114_HOLGER",
+		"MIL_350_ADDON_MARTIN",
+		"PIR_1357_ADDON_GARETT",
+		"PIR_50087",
+		"AL_NPC_TAVERN",
+		"AL_NPC_HERMIT",
+		"AL_INNKEEPR",
+		"ORC_8549_TRADEORC",
+		"VLK_4108_ENGOR",
+		"PAL_260_TANDOR",
+		"PAL_267_SENGRATH",
+		"XBS_7508_GORNABAR",
+		"DJG_710_KJORN",
+	};
+	std::vector<zSTRING> smithTradersList = {
+		"SLD_809_BENNET",
+		"BAU_908_HODGES",
+		"SLD_803_CIPHER",
+		"VLK_457_BRIAN",
+		"BDT_1099_ADDON_HUNO",
+		"AL_SMITH",
+		"AL_COMMON_SMITH",
+		"XBS_7513_DARRION",
+		"MIL_314_MORTIS"
+	};
+	std::vector<zSTRING> hunterList = {
+		"VLK_413_BOSPER",
+		"HUN_745_RAFFA",
 	};
 
 	void addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
@@ -80,6 +129,31 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 	}
 
+	bool RX_IsSmithTrader(oCNpc* npc) {
+		auto npcName = npc->GetObjectName();
+
+		for (auto i = 0; i < smithTradersList.size(); i += 1) {
+			if (npcName.HasWordI(smithTradersList[i])) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	bool RX_IsHunterTrader(oCNpc* npc) {
+		auto npcName = npc->GetObjectName();
+
+		for (auto i = 0; i < hunterList.size(); i += 1) {
+			if (npcName.HasWordI(hunterList[i])) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+
 	bool RX_IsTrader(oCNpc* npc) {
 		auto npcName = npc->GetObjectName();
 
@@ -89,6 +163,6 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		return RX_IsMageTrader(npc) || RX_IsAlchemistTrader(npc);
+		return RX_IsMageTrader(npc) || RX_IsAlchemistTrader(npc) || RX_IsSmithTrader(npc) || RX_IsHunterTrader(npc);
 	}
 }

@@ -16,6 +16,8 @@ namespace GOTHIC_ENGINE {
 		tradersLoot = jsonConfig.lootTable("traders-loot");
 		NPC_LOOT_TABLE = jsonConfig.lootTable("base-table");
 		humanLoot = jsonConfig.lootTable("human-loot");
+		smithLoot = jsonConfig.lootTable("smith-loot");
+		humanLoot = jsonConfig.lootTable("hunter-loot");
 	}
 
 	string GetEngineVersionName(TEngineVersion version) {

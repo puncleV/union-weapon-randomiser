@@ -7,6 +7,7 @@ namespace GOTHIC_ENGINE {
 	auto const RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX = 392;
 	auto const PLAYER_CHESTS_CONTENT_CHANGED_VAR_IDX = 390;
 
+
 	void addLootToNPC(oCNpc* npc) { 
 		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
 		auto randomUpperBound = getRandomLootUpperound(world);
@@ -36,15 +37,18 @@ namespace GOTHIC_ENGINE {
 
 			addRandomLootToNpc(npc, bossLoot);
 		}
-		else if (npc->IsHuman()) {
-			addRandomLootToNpc(npc, humanLoot);
-		}
 		else if (randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 			addRandomLootToNpc(npc);
 
 			if (npc->attribute[NPC_ATR_HITPOINTSMAX] >= hpFactor && randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 				addRandomLootToNpc(npc);
 			}
+
+			if (npc->IsHuman()) {
+				addRandomLootToNpc(npc, humanLoot);
+			}
+		} else if (npc->IsHuman()) {
+			addRandomLootToNpc(npc, humanLoot);
 		}
 
 		npc->setNpcVar(ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX, TRUE);

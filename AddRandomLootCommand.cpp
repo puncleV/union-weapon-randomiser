@@ -17,27 +17,28 @@ namespace GOTHIC_ENGINE {
 					continue;
 
 				if (RX_IsMageTrader(npc)) {
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
-
 					addRandomLootToNpc(npc, magicLoot);
 				}
 				else if (RX_IsAlchemistTrader(npc)) {
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
 					addRandomLootToNpc(npc, alchemistLoot);
 				}
+				else if (RX_IsSmithTrader(npc)) {
+					addRandomLootToNpc(npc, smithLoot);
+				}
+				else if (RX_IsHunterTrader(npc)) {
+					addRandomLootToNpc(npc, hunterLoot);
+				}
 				else if (RX_IsTrader(npc)) {
-					npcsCount += 1;
+					addRandomLootToNpc(npc);
+					addRandomLootToNpc(npc);
+					addRandomLootToNpc(npc);
 
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
 					addRandomLootToNpc(npc, tradersLoot);
 				}
 				else if (RX_IsBoss(npc)) {
-					npcsCount += 1;
 					addRandomLootToNpc(npc);
 					addRandomLootToNpc(npc);
+
 					addRandomLootToNpc(npc, bossLoot);
 				}
 				else if (randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {

@@ -147,4 +147,6 @@ namespace GOTHIC_ENGINE {
 	std::vector<Loot> magicLoot;
 	std::vector<Loot> tradersLoot;
 	std::vector<Loot> humanLoot;
+	std::vector<Loot> smithLoot;
+	std::vector<Loot> hunterLoot;
 }
