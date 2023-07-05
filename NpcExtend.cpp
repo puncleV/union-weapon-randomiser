@@ -5,8 +5,6 @@ namespace GOTHIC_ENGINE {
 	auto const ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX = 390;
 	auto const WEAPON_RANDOMIZED_NPC_VAR_IDX = 391;
 	auto const RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX = 392;
-	auto const PLAYER_CHESTS_CONTENT_CHANGED_VAR_IDX = 390;
-
 
 	void addLootToNPC(oCNpc* npc) { 
 		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
@@ -14,16 +12,16 @@ namespace GOTHIC_ENGINE {
 		auto hpFactor = world->GetObjectName().HasWordI("NEWWORLD") ? EXTRA_LOOT_HP_FACTOR_HORINIS : EXTRA_LOOT_HP_FACTOR_OTHER;
 
 		if (RX_IsMageTrader(npc)) {
-			addRandomLootToNpc(npc);
-			addRandomLootToNpc(npc);
-
 			addRandomLootToNpc(npc, magicLoot);
 		}
 		else if (RX_IsAlchemistTrader(npc)) {
-			addRandomLootToNpc(npc);
-			addRandomLootToNpc(npc);
-
 			addRandomLootToNpc(npc, alchemistLoot);
+		}
+		else if (RX_IsHunterTrader(npc)) {
+			addRandomLootToNpc(npc, hunterLoot);
+		}
+		else if (RX_IsSmithTrader(npc)) {
+			addRandomLootToNpc(npc, smithLoot);
 		}
 		else if (RX_IsTrader(npc)) {
 			addRandomLootToNpc(npc);
@@ -43,10 +41,6 @@ namespace GOTHIC_ENGINE {
 			if (npc->attribute[NPC_ATR_HITPOINTSMAX] >= hpFactor && randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
 				addRandomLootToNpc(npc);
 			}
-
-			if (npc->IsHuman()) {
-				addRandomLootToNpc(npc, humanLoot);
-			}
 		} else if (npc->IsHuman()) {
 			addRandomLootToNpc(npc, humanLoot);
 		}
@@ -55,8 +49,6 @@ namespace GOTHIC_ENGINE {
 	}
 
 	void randomizeMeleeWeapon(oCNpc* npc) {
-		meleeWeaponsList = getMeleeWeaponsList();
-
 		for (;;) {
 			int weaponId = meleeWeaponsList[randomizer.Random(0, meleeWeaponsList.GetNumInList() - 1)];
 			oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, weaponId));
@@ -128,7 +120,9 @@ namespace GOTHIC_ENGINE {
 
 	int oCNpc::getNpcVar(int varIdx) {
 		parser->SetInstance("NPCVARINST", this);
-		return *(int*)parser->CallFunc(parser->GetIndex("GetNpcVar"), varIdx);
+		auto value = *(int*)parser->CallFunc(parser->GetIndex("GetNpcVar"), varIdx);
+
+		return value;
 	}
 
 	void goThroughNpcHandlers(oCNpc* npc) {

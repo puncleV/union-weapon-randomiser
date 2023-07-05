@@ -17,7 +17,7 @@ namespace GOTHIC_ENGINE {
 		NPC_LOOT_TABLE = jsonConfig.lootTable("base-table");
 		humanLoot = jsonConfig.lootTable("human-loot");
 		smithLoot = jsonConfig.lootTable("smith-loot");
-		humanLoot = jsonConfig.lootTable("hunter-loot");
+		hunterLoot = jsonConfig.lootTable("hunter-loot");
 	}
 
 	string GetEngineVersionName(TEngineVersion version) {
@@ -80,6 +80,22 @@ namespace GOTHIC_ENGINE {
 	}
 
 	void LoadEnd() {
+		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
+		auto npcsCount = 0;
+
+		if (world) {
+			auto list = world->voblist_npcs;
+			for (size_t i = 0; i < list->GetNumInList(); ++i)
+			{
+				oCNpc* npc = list->Get(i);
+
+				if (npc == oCNpc::player || !npc->IsHuman())
+					continue;
+
+				goThroughNpcHandlers(npc);
+			}
+		}
+		
 	}
 
 	void Game_LoadBegin_NewGame() {

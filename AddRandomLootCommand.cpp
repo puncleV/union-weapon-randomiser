@@ -13,42 +13,7 @@ namespace GOTHIC_ENGINE {
 			{
 				oCNpc* npc = list->Get(i);
 
-				if (npc == oCNpc::player || npc->attribute[NPC_ATR_HITPOINTS] <= 1)
-					continue;
-
-				if (RX_IsMageTrader(npc)) {
-					addRandomLootToNpc(npc, magicLoot);
-				}
-				else if (RX_IsAlchemistTrader(npc)) {
-					addRandomLootToNpc(npc, alchemistLoot);
-				}
-				else if (RX_IsSmithTrader(npc)) {
-					addRandomLootToNpc(npc, smithLoot);
-				}
-				else if (RX_IsHunterTrader(npc)) {
-					addRandomLootToNpc(npc, hunterLoot);
-				}
-				else if (RX_IsTrader(npc)) {
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
-
-					addRandomLootToNpc(npc, tradersLoot);
-				}
-				else if (RX_IsBoss(npc)) {
-					addRandomLootToNpc(npc);
-					addRandomLootToNpc(npc);
-
-					addRandomLootToNpc(npc, bossLoot);
-				}
-				else if (randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
-					npcsCount += 1;
-					addRandomLootToNpc(npc);
-
-					if (npc->attribute[NPC_ATR_HITPOINTSMAX] >= hpFactor && randomizer.Random(0, randomUpperBound) <= getExtraLootProbability(npc, world)) {
-						addRandomLootToNpc(npc);
-					}
-				}
+				addLootToNPC(npc);
 			}
 		}
 

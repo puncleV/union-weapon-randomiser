@@ -18,56 +18,61 @@ namespace GOTHIC_ENGINE {
     }
 
     void exchangeContentWithAnyOtherChest(oCMobContainer* chest) {
+        zCArray<zCVob*> arrMob;
         oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
+        std::vector<oCMobContainer*> chestsList;
 
         if (world) {
-            zCArray<zCVob*> arrMob;
-
             world->SearchVobListByClass(oCMobContainer::classDef, arrMob, NULL);
-
-            std::vector<oCMobContainer*> nonTouchedChests;
-            for (size_t i = 0; i < arrMob.GetNumInList(); ++i)
-            {
-                oCMobContainer* chest = dynamic_cast<oCMobContainer*> (arrMob[i]);
-
-                if (chest->containList.GetNumInList() > 0 && !(chest->isRandomized())) {
-                    nonTouchedChests.push_back(chest);
-                }
-            }
-
-            for (auto attempt = 0; attempt < 2; attempt += 1) {
-                auto chestToSwitchWith = randomizer.getRandomArrayElement(nonTouchedChests);
-
-                std::vector<oCItem*> chestItems;
-                std::vector<oCItem*> secondChestItems;
-
-                for (size_t j = 0; j < chest->containList.GetNumInList(); ++j) {
-                    if (IsQuestItem(chest->containList[j]) || IsIgnoredOrTestItem(chest->containList[j])) {
-                        continue;
-                    }
-
-                    chestItems.push_back(chest->containList[j]);
-                    chest->Remove(chest->containList[j]);
-                }
-
-                for (size_t j = 0; j < chestToSwitchWith->containList.GetNumInList(); ++j) {
-                    if (IsQuestItem(chestToSwitchWith->containList[j]) || IsIgnoredOrTestItem(chestToSwitchWith->containList[j])) {
-                        continue;
-                    }
-
-                    secondChestItems.push_back(chestToSwitchWith->containList[j]);
-                    chestToSwitchWith->Remove(chestToSwitchWith->containList[j]);
-                }
-
-                for (size_t j = 0; j < chestItems.size(); ++j) {
-                    chestToSwitchWith->Insert(chestItems[j]);
-                }
-
-                for (size_t j = 0; j < secondChestItems.size(); ++j) {
-                    chest->Insert(secondChestItems[j]);
-                }
+            for (auto i = 0; i < arrMob.GetNumInList(); i += 1) {
+                chestsList.push_back(dynamic_cast<oCMobContainer*>(arrMob[i]));
             }
         }
+
+        std::vector<oCMobContainer*> nonTouchedChests;
+        for (auto i = 0; i < chestsList.size(); i += 1)
+        {
+            oCMobContainer* chest = chestsList[i];
+
+            if (chest->containList.GetNumInList() > 0 && !(chest->isRandomized())) {
+                nonTouchedChests.push_back(chest);
+            }
+        }
+
+        for (auto attempt = 0; attempt < 3; attempt += 1) {
+            auto chestToSwitchWith = randomizer.getRandomArrayElement(nonTouchedChests);
+
+            std::vector<oCItem*> chestItems;
+            std::vector<oCItem*> secondChestItems;
+
+            for (size_t j = 0; j < chest->containList.GetNumInList(); ++j) {
+                if (IsQuestItem(chest->containList[j]) || IsIgnoredOrTestItem(chest->containList[j])) {
+                    continue;
+                }
+
+                chestItems.push_back(chest->containList[j]);
+                chest->Remove(chest->containList[j]);
+            }
+
+            for (size_t j = 0; j < chestToSwitchWith->containList.GetNumInList(); ++j) {
+                if (IsQuestItem(chestToSwitchWith->containList[j]) || IsIgnoredOrTestItem(chestToSwitchWith->containList[j])) {
+                    continue;
+                }
+
+                secondChestItems.push_back(chestToSwitchWith->containList[j]);
+                chestToSwitchWith->Remove(chestToSwitchWith->containList[j]);
+            }
+
+            for (size_t j = 0; j < chestItems.size(); ++j) {
+                chestToSwitchWith->Insert(chestItems[j]);
+            }
+
+            for (size_t j = 0; j < secondChestItems.size(); ++j) {
+                chest->Insert(secondChestItems[j]);
+            }
+        }
+
+        chestsList.clear();
     }
 
 	void oCMobContainer::randomize() {
