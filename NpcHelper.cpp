@@ -77,6 +77,7 @@ namespace GOTHIC_ENGINE {
 		"VLK_413_BOSPER",
 		"HUN_745_RAFFA",
 	};
+	std::vector<zSTRING> ignoreLootNpcList = { "TOTEM" };
 
 	void addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
 		for (size_t i = 0; i < lootTable.size(); ++i)
@@ -164,5 +165,17 @@ namespace GOTHIC_ENGINE {
 		}
 
 		return RX_IsMageTrader(npc) || RX_IsAlchemistTrader(npc) || RX_IsSmithTrader(npc) || RX_IsHunterTrader(npc);
+	}
+
+	bool ignoredNpcForLoot(oCNpc* npc) {
+		auto npcName = npc->GetObjectName();
+
+		for (auto i = 0; i < ignoreLootNpcList.size(); i += 1) {
+			if (npcName.HasWordI(ignoreLootNpcList[i])) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }

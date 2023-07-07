@@ -7,6 +7,10 @@ namespace GOTHIC_ENGINE {
 	auto const RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX = 392;
 
 	void addLootToNPC(oCNpc* npc) { 
+		if (ignoredNpcForLoot(npc)) {
+			return;
+		}
+
 		oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
 		auto randomUpperBound = getRandomLootUpperound(world);
 		auto hpFactor = world->GetObjectName().HasWordI("NEWWORLD") ? EXTRA_LOOT_HP_FACTOR_HORINIS : EXTRA_LOOT_HP_FACTOR_OTHER;
