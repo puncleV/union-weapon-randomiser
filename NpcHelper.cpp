@@ -77,7 +77,7 @@ namespace GOTHIC_ENGINE {
 		"VLK_413_BOSPER",
 		"HUN_745_RAFFA",
 	};
-	std::vector<zSTRING> ignoreLootNpcList = { "TOTEM" };
+	std::vector<zSTRING> ignoreLootNpcList = { "TOTEM", "CRAIT", "KHUBA", "SUMKHUBI", "PET_JINA" };
 
 	bool addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
 		auto addedLoot = false;
@@ -108,6 +108,10 @@ namespace GOTHIC_ENGINE {
 
 	bool RX_IsBoss(oCNpc* npc) {
 		return (npc && npc->aiscriptvars[AIV_BOSS] == TRUE);
+	}
+
+	bool RX_IsSummon(oCNpc* npc) {
+		return (npc && npc->aiscriptvars[AIV_SUMMON] == TRUE);
 	}
 
 	bool RX_IsAlchemistTrader(oCNpc* npc) {

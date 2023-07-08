@@ -4,6 +4,7 @@
 #include<set>
 namespace GOTHIC_ENGINE {
 	auto const AIV_BOSS = 90;
+	auto const AIV_SUMMON = 91;
 	auto JSON_FILE_NAME = "punclev-utils.json";
 
 	auto EXTRA_LOOT_BASE_CHANCE = 15;
