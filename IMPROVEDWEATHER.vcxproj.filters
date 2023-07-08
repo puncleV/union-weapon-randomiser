@@ -2778,7 +2778,7 @@
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="RandomiseWeaponsCommand.cpp">
+    <ClInclude Include="RegisterCommands.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
     <ClInclude Include="Randomiser.cpp">
@@ -2790,13 +2790,10 @@
     <ClInclude Include="ItemHelpers.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="ShuffleChests.cpp">
+    <ClInclude Include="AddRandomChestsLoot.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="ShuffleHerbs.cpp">
-      <Filter>Plugin\Workspace\Plugin</Filter>
-    </ClInclude>
-    <ClInclude Include="AddRandomLootCommand.cpp">
+    <ClInclude Include="AddRandomNpcLoot.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
     </ClInclude>
     <ClInclude Include="Loot.cpp">

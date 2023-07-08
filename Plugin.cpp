@@ -3,9 +3,6 @@
 #include "resource.h"
 
 namespace GOTHIC_ENGINE {
-	// TO DO
-	// Your code ...
-
 	void Game_Entry() {
 	}
 
@@ -18,6 +15,14 @@ namespace GOTHIC_ENGINE {
 		humanLoot = jsonConfig.lootTable("human-loot");
 		smithLoot = jsonConfig.lootTable("smith-loot");
 		hunterLoot = jsonConfig.lootTable("hunter-loot");
+		
+		if (SHOULD_USE_NPC_LOOT_FOR_CHESTS) {
+			chestsLoot = NPC_LOOT_TABLE;
+		}
+		else {
+			chestsLoot = jsonConfig.lootTable("chest-loot");
+		}
+
 	}
 
 	string GetEngineVersionName(TEngineVersion version) {
@@ -50,7 +55,7 @@ namespace GOTHIC_ENGINE {
 			auto focusNpc = player->GetFocusNpc();
 
 			if (focusNpc) {
-				screen->PrintCY(10, " L: " + Z focusNpc->getNpcVar(ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX) + " W: " + Z focusNpc->getNpcVar(WEAPON_RANDOMIZED_NPC_VAR_IDX) + " RW:" + Z focusNpc->getNpcVar(RANGED_WEAPON_RANDOMIZED_NPC_VAR_IDX));
+				screen->PrintCY(500, " L: " + Z focusNpc->getNpcVar(ADDITIONAL_LOOT_GIVEN_NPC_VAR_IDX));
 			}
 
 			auto focusVob = player->GetFocusVob(); 

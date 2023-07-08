@@ -56,6 +56,10 @@ namespace GOTHIC_ENGINE {
 				auto itemName = randomizer.getRandomArrayElement(possibleLootNames);
 				auto item = getItemWithAmount(itemName);
 
+				if (item == nullptr) {
+					return FALSE;
+				}
+
 				if (SHOULD_ADD_LOOT_TO_PLAYER) {
 					player->PutInInv(item);
 				}
@@ -77,7 +81,7 @@ namespace GOTHIC_ENGINE {
 				return;
 			}
 
-			auto addStrengthMultiplier = (int)(itemValue / VALUE_STRENGTH_PER_LOOT_MULTIPLIER) + BASE_STRENGTH_PER_LOOT_MULTIPLIER;
+			auto addStrengthMultiplier = (int)(itemValue / EXTRA_LOOT_VALUE_STRENGTH_PER_LOOT_MULTIPLIER) + EXTRA_LOOT_BASE_STRENGTH_PER_LOOT_MULTIPLIER;
 			auto extaHpBasePercent = ENEMY_HP_FACTOR / npc->attribute[NPC_ATR_HITPOINTSMAX];
 			int additionalHp = randomizer.Random(50 * addStrengthMultiplier, npc->attribute[NPC_ATR_HITPOINTSMAX] * extaHpBasePercent * addStrengthMultiplier);
 

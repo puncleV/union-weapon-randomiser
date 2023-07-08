@@ -870,7 +870,7 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClInclude Include="AddRandomLootCommand.cpp">
+    <ClInclude Include="AddRandomNpcLoot.cpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -928,16 +928,12 @@ $(ALLUSERSPROFILE)\Union\SDK\Union\v1.0m\Build\incver.exe $(ProjectDir)</Command
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="RandomiseWeaponsCommand.cpp">
+    <ClInclude Include="RegisterCommands.cpp">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="ShuffleChests.cpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="ShuffleHerbs.cpp">
+    <ClInclude Include="AddRandomChestsLoot.cpp">
       <SubType>
       </SubType>
     </ClInclude>

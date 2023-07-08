@@ -61,11 +61,11 @@ namespace GOTHIC_ENGINE {
 		"PAL_267_SENGRATH",
 		"XBS_7508_GORNABAR",
 		"DJG_710_KJORN",
+		"SLD_803_CIPHER"
 	};
 	std::vector<zSTRING> smithTradersList = {
 		"SLD_809_BENNET",
 		"BAU_908_HODGES",
-		"SLD_803_CIPHER",
 		"VLK_457_BRIAN",
 		"BDT_1099_ADDON_HUNO",
 		"AL_SMITH",
@@ -79,11 +79,15 @@ namespace GOTHIC_ENGINE {
 	};
 	std::vector<zSTRING> ignoreLootNpcList = { "TOTEM" };
 
-	void addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
+	bool addRandomLootToNpc(oCNpc* npc, std::vector<Loot>& lootTable = NPC_LOOT_TABLE) {
+		auto addedLoot = false;
+		
 		for (size_t i = 0; i < lootTable.size(); ++i)
 		{
-			lootTable[i].tryAddToNpc(npc);
+			addedLoot = lootTable[i].tryAddToNpc(npc) || addedLoot;
 		}
+
+		return addedLoot;
 	}
 
 	bool npcCanWearWeapon(oCItem* item, oCNpc* npc) {

@@ -20,123 +20,6 @@ namespace GOTHIC_ENGINE {
 			item->GetObjectName().HasWordI("ITMW_1H_THIEF_01_RIGHT") || item->GetObjectName().StartWith("ITKE_") || item->GetObjectName().StartWith("LUTERO") || item->GetObjectName().StartWith("SNC_SPEC");
 	}
 
-	bool IsItemSymbol(zCPar_Symbol* symbol) {
-		if (symbol->type != zPAR_TYPE_INSTANCE) {
-			return false;
-		}
-
-		//  Instance isn't global scope
-		if (symbol->name.HasWord(".")) {
-			return false;
-		}
-
-		auto baseClass = parser->GetBaseClass(symbol);
-
-		// Symbol isn't a item class
-		if (baseClass != parser->GetIndex(oCItem::classDef->scriptClassName)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	// duals - LEFT RIGHT
-	zCArray<int> getMeleeWeaponsList() {
-		zCArray<int> weapons_list;
-
-		auto c_item = parser->GetIndex(oCItem::classDef->scriptClassName);
-		if (c_item == -1) {
-			return 0;
-		}
-
-		int itemsCreated = 0;
-		for (int i = 0; i < parser->symtab.GetNumInList(); i++) {
-			zCPar_Symbol* symbol = parser->symtab.table[i];
-
-			if (i == parser->instance_help) {
-				continue;
-			}
-
-			if (!IsItemSymbol(symbol)) {
-				continue;
-			}
-
-			oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, i));
-
-			if (item == nullptr || item->mainflag != ITM_CAT_NF || item->HasFlag(ITM_FLAG_SHIELD) || IsIgnoredOrTestItem(item)) {
-				continue;
-			}
-
-			item->Release();
-
-			weapons_list.Insert(i);
-		}
-
-		return weapons_list;
-	}
-
-	zCArray<int> getRangeWeaponsList() {
-		zCArray<int> weapons_list;
-		auto c_item = parser->GetIndex(oCItem::classDef->scriptClassName);
-		if (c_item == -1) {
-			return 0;
-		}
-
-		int itemsCreated = 0;
-		for (int i = 0; i < parser->symtab.GetNumInList(); i++) {
-			zCPar_Symbol* symbol = parser->symtab.table[i];
-
-			if (i == parser->instance_help) {
-				continue;
-			}
-
-			if (!IsItemSymbol(symbol)) {
-				continue;
-			}
-
-			oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, i));
-
-			if (item == nullptr || item->mainflag != ITM_CAT_FF || IsIgnoredOrTestItem(item)) {
-				continue;
-			}
-			item->Release();
-
-			weapons_list.Insert(i);
-		}
-
-		return weapons_list;
-	}
-
-	oCItem* FindRandomItemThatHasString(zCArray<int> itemsList, zSTRING string) {
-
-		for (auto iterator = 0;iterator < itemsList.GetNumInList();iterator += 1)
-		{
-			int itemId = itemsList[iterator];
-
-			oCItem* item = static_cast<oCItem*>(ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, itemId));
-
-			if (item->GetObjectName().HasWordI(string)) {
-				return item;
-			}
-
-			item->Release();
-		}
-
-		return nullptr;
-	}
-
-	bool IsDual(oCItem* item) {
-		return item->GetObjectName().HasWordI("right") || item->GetObjectName().HasWordI("left");
-	}
-
-	zSTRING OppositDualHand(oCItem* item) {
-		if (item->GetObjectName().HasWordI("right")) {
-			return "left";
-		}
-
-		return "right";
-	}
-
 	int getRandomLootUpperound(oCWorld* world) {
 		return world->m_strlevelName.HasWordI("NEWWORLD") ? EXTRA_LOOT_HORINIS_FACTOR : EXTRA_LOOT_OTHER_FACTOR;
 	}
@@ -149,4 +32,5 @@ namespace GOTHIC_ENGINE {
 	std::vector<Loot> humanLoot;
 	std::vector<Loot> smithLoot;
 	std::vector<Loot> hunterLoot;
+	std::vector<Loot> chestsLoot;
 }
