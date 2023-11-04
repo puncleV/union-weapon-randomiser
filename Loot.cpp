@@ -77,7 +77,7 @@ namespace GOTHIC_ENGINE {
 		};
 
 		void strengthenNpc(oCNpc* npc, int itemValue = 1) {
-			if (npc == player) {
+			if (npc == player || !SHOULD_STRENGHTEN_ENEMIES) {
 				return;
 			}
 

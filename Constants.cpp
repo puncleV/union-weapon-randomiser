@@ -27,6 +27,8 @@ namespace GOTHIC_ENGINE {
 	auto SHOULD_ADD_LOOT_TO_NPC = FALSE;
 	auto SHOULD_ADD_LOOT_TO_CHESTS = FALSE;
 	auto SHOULD_USE_NPC_LOOT_FOR_CHESTS = TRUE;
+	auto SHOULD_STRENGHTEN_ENEMIES = TRUE;
+	auto ALLOW_LOOT_BOXES = FALSE;
 	auto IS_DEBUG = FALSE;
 
 	int getExtraLootProbability(oCNpc* npc, oCWorld* world) {
